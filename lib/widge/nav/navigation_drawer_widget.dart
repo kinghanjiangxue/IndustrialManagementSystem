@@ -1,11 +1,11 @@
 import 'package:universe/data/drawer_items.dart';
-import 'package:universe/model/drawer_item.dart';
+import 'package:universe/model/home/drawer_item.dart';
 import 'package:universe/page/deployment_page.dart';
-import 'package:universe/page/get_started_page.dart';
+import 'package:universe/page/pie/pie_home_page.dart';
 import 'package:universe/page/performance_page.dart';
 import 'package:universe/page/resources_page.dart';
-import 'package:universe/page/samples_page.dart';
-import 'package:universe/page/testing_page.dart';
+import 'package:universe/page/bar/bar_home_page.dart';
+import 'package:universe/page/output/output_page.dart';
 import 'package:universe/provider/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -86,10 +86,10 @@ class NavigationDrawerWidget extends StatelessWidget {
 
     switch (index) {
       case 0:
-        navigateTo(GetStartedPage());
+        navigateTo(BarHomePage());
         break;
       case 1:
-        navigateTo(SamplesPage());
+        navigateTo(HomePiePage());
         break;
       case 2:
         navigateTo(TestingPage());

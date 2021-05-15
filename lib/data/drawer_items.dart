@@ -1,4 +1,4 @@
-import 'package:universe/model/drawer_item.dart';
+import 'package:universe/model/home/drawer_item.dart';
 import 'package:flutter/material.dart';
 
 final itemsFirst = [

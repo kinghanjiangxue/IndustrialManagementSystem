@@ -1,8 +1,11 @@
+// @dart=2.9
+//禁用健全的空安全
 import 'package:universe/provider/navigation_provider.dart';
-import 'package:universe/widge/navigation_drawer_widget.dart';
+import 'package:universe/widge/nav/navigation_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:universe/widge/home/home_table_widget.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +18,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final String title = 'Navigation Drawer';
+  static final String title = '深圳市齐飞达精密科技有限公司生产管理系统';
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
@@ -42,6 +45,9 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: Color(0xff3875F6),
       title: Text(MyApp.title),
       centerTitle: true,
+    ),
+    body: Center(
+      child:GenerateTable() ,
     ),
   );
 }
