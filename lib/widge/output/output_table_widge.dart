@@ -16,22 +16,32 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
 
   fetchUsers() async {
     var data = await http.get(
-        Uri.parse('https://next.json-generator.com/api/json/get/41QMzRdOc'));
+        Uri.parse('https://next.json-generator.com/api/json/get/EJU8um9O5'));
     var jsonData = json.decode(data.body);
 
     List<User> users = [];
 
     for (var i in jsonData) {
-      User user = User(i['name'], i['gender'], i['age'], i['email'],
-          i['eyeColor'], i['phone'], i['company']);
+      User user = User(
+        i['seven'],
+        i['eight'],
+        i['nine'],
+        i['ten'],
+        i['eleven'],
+        i['twelve'],
+        i['thirteen'],
+        i['fourteen'],
+        i['fifteen'],
+        i['sixteen'],
+        i['seventeen'],
+        i['eighteen'],
+        i['nineteen'],
+      );
       users.add(user);
-      print(user.eyeColor);
     }
-    print(users.length);
     this.setState(() {
       _userList = users;
     });
-
   }
 
   @override
@@ -39,7 +49,6 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
     fetchUsers();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +74,10 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child:
-                  DataTable(
-
+                  child: DataTable(
                     columns: [
                       DataColumn(label: Text("时间")),
-                      DataColumn(label: Text("8:45")),
+                      DataColumn(label: Text("8:45-9:45")),
                       DataColumn(label: Text("9:45")),
                       DataColumn(label: Text("10：45")),
                       DataColumn(label: Text("11：45")),
@@ -83,28 +90,28 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                       DataColumn(label: Text("19：45")),
                       DataColumn(label: Text("20：45")),
                     ],
-
                     rows: _userList
                         .map(
-                      ((val) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text('昨日产量')),
-                          DataCell(Text(val.gender)),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.email)),
-                          DataCell(Text(val.eyeColor)),
-                          DataCell(Text(val.phone)),
-                          DataCell(Text(val.company)),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.age.toString())),
-
-                        ],
-                      )),
-                    )
+                          ((val) => DataRow(
+                                cells: <DataCell>[
+                                  DataCell(
+                                      Text(val.seven,
+                                      style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataCell(Text(val.eight.toString())),
+                                  DataCell(Text(val.nine.toString())),
+                                  DataCell(Text(val.ten.toString())),
+                                  DataCell(Text(val.eleven.toString())),
+                                  DataCell(Text(val.twelve.toString())),
+                                  DataCell(Text(val.thirteen.toString())),
+                                  DataCell(Text(val.fourteen.toString())),
+                                  DataCell(Text(val.fifteen.toString())),
+                                  DataCell(Text(val.sixteen.toString())),
+                                  DataCell(Text(val.seventeen.toString())),
+                                  DataCell(Text(val.eighteen.toString())),
+                                  DataCell(Text(val.nineteen.toString())),
+                                ],
+                              )),
+                        )
                         .toList(),
                   ),
                 ),
@@ -118,14 +125,33 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
 }
 
 class User {
-  final String name;
-  final String gender;
-  final int age;
-  final String email;
-  final String eyeColor;
-  final String phone;
-  final String company;
+  final String seven;
+  final int eight;
+  final int nine;
+  final int ten;
+  final int eleven;
+  final int twelve;
+  final int thirteen;
+  final int fourteen;
+  final int fifteen;
+  final int sixteen;
+  final int seventeen;
+  final int eighteen;
+  final int nineteen;
 
-  User(this.name, this.gender, this.age, this.email, this.eyeColor, this.phone,
-      this.company);
+  User(
+    this.seven,
+    this.eight,
+    this.nine,
+    this.ten,
+    this.eleven,
+    this.twelve,
+    this.thirteen,
+    this.fourteen,
+    this.fifteen,
+    this.sixteen,
+    this.seventeen,
+    this.eighteen,
+    this.nineteen,
+  );
 }
