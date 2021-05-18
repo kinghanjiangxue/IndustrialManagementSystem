@@ -8,10 +8,10 @@ class BarChartPage extends StatelessWidget {
     // shape: RoundedRectangleBorder(
     //   // borderRadius: BorderRadius.circular(32),
     // ),
-    color: const Color(0xff020227),
+    // color: const Color(0xff020227),
     child: Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: BarChartWidget(),
+      child: BarChartSample2(),
     ),
   );
 }
