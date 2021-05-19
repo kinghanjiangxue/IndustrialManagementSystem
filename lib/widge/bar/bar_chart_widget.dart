@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:universe/widge/bar/bar_titles.dart';
-import 'package:universe/data/bar_data.dart';
+import 'package:universe/data/bar/bar_titles.dart';
+import 'package:universe/data/bar/bar_data.dart';
 
 // 分组柱状图
 

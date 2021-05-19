@@ -7,7 +7,7 @@ class BarData {
   static List<Data> barData = [
     Data(
       id: 0,
-      name: 'Mon',
+      name: 'Monday',
       y: 15,
       color: Color(0xff19bfff),
     ),

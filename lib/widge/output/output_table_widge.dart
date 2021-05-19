@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'dart:convert';import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/gestures.dart';
+// import 'package:universe/data/bar/bar_data.dart';
+import 'package:universe/data/output/output_titles.dart';
+import 'package:universe/data/output/output_data.dart';
+
 
 class GenerateOutputTable extends StatefulWidget {
   // const GenerateOutputTable({Key key}) : super(key: key);
@@ -12,146 +17,269 @@ class GenerateOutputTable extends StatefulWidget {
 }
 
 class _GenerateOutputTableState extends State<GenerateOutputTable> {
-  List<User> _userList = [];
+  final Color leftBarColorOne = const Color(0xffFA8FE9);
+  final Color rightBarColorOne = const Color(0xff5296FA);
+  final double width = 15;
 
-  fetchUsers() async {
-    var data = await http.get(
-        Uri.parse('https://next.json-generator.com/api/json/get/EJU8um9O5'));
-    var jsonData = json.decode(data.body);
+  late List<BarChartGroupData> rawBarGroups;
+  late List<BarChartGroupData> showingBarGroups;
 
-    List<User> users = [];
-
-    for (var i in jsonData) {
-      User user = User(
-        i['seven'],
-        i['eight'],
-        i['nine'],
-        i['ten'],
-        i['eleven'],
-        i['twelve'],
-        i['thirteen'],
-        i['fourteen'],
-        i['fifteen'],
-        i['sixteen'],
-        i['seventeen'],
-        i['eighteen'],
-        i['nineteen'],
-      );
-      users.add(user);
-    }
-    this.setState(() {
-      _userList = users;
-    });
-  }
+  int touchedGroupIndex = -1;
 
   @override
   void initState() {
-    fetchUsers();
     super.initState();
+    final barGroup1 = makeGroupData(0, 5, 12);
+    final barGroup2 = makeGroupData(1, 16, 12);
+    final barGroup3 = makeGroupData(2, 18, 5);
+    final barGroup4 = makeGroupData(3, 20, 16);
+    final barGroup5 = makeGroupData(4, 17, 6);
+    final barGroup6 = makeGroupData(5, 19, 1.5);
+    final barGroup7 = makeGroupData(6, 10, 1.5);
+    final barGroup8 = makeGroupData(7, 5, 12);
+    final barGroup9 = makeGroupData(8, 16, 12);
+    final barGroup10 = makeGroupData(9, 18, 5);
+    final barGroup11 = makeGroupData(10, 20, 16);
+    final barGroup12 = makeGroupData(11, 17, 6);
+    final barGroup13 = makeGroupData(12, 19, 1.5);
+    final barGroup14 = makeGroupData(13, 10, 1.5);
+
+    final items = [
+      barGroup1,
+      barGroup2,
+      barGroup3,
+      barGroup4,
+      barGroup5,
+      barGroup6,
+      barGroup7,
+      barGroup8,
+      barGroup9,
+      barGroup10,
+      barGroup11,
+      barGroup12,
+      barGroup13,
+      barGroup14,
+    ];
+
+    rawBarGroups = items;
+
+    showingBarGroups = rawBarGroups;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.rectangle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    offset: const Offset(3.0, 3.0),
-                    blurRadius: 5.0,
-                    spreadRadius: 2.0,
-                  )
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Card(
+        elevation: 0,
+        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        color: const Color(0xffffffff),
+        child: Padding(
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(
+                    height: 50,
+                    width: 100,
+                  ),
+                  const Text(
+                    'Productions',
+                    style: TextStyle(color: Colors.black, fontSize: 22),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  const Text(
+                    'state',
+                    style: TextStyle(color: Color(0xff999999), fontSize: 16),
+                  ),
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  Container(
+                    color: Color(0xffFA8FE9),
+                    alignment: Alignment.center,
+                    width: 15,
+                    height: 15,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    '昨日产量',
+                    style: TextStyle(color: Color(0xff333333), fontSize: 16),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    color: Color(0xff5296FA),
+                    alignment: Alignment.center,
+                    width: 15,
+                    height: 15,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    '今日产量',
+                    style: TextStyle(color: Color(0xff333333), fontSize: 16),
+                  ),
+
                 ],
+
               ),
-              margin: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("时间")),
-                      DataColumn(label: Text("8:45-9:45")),
-                      DataColumn(label: Text("9:45")),
-                      DataColumn(label: Text("10：45")),
-                      DataColumn(label: Text("11：45")),
-                      DataColumn(label: Text("13：45")),
-                      DataColumn(label: Text("14：45")),
-                      DataColumn(label: Text("15：45")),
-                      DataColumn(label: Text("16：45")),
-                      DataColumn(label: Text("17：45")),
-                      DataColumn(label: Text("18：45")),
-                      DataColumn(label: Text("19：45")),
-                      DataColumn(label: Text("20：45")),
-                    ],
-                    rows: _userList
-                        .map(
-                          ((val) => DataRow(
-                                cells: <DataCell>[
-                                  DataCell(
-                                      Text(val.seven,
-                                      style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataCell(Text(val.eight.toString())),
-                                  DataCell(Text(val.nine.toString())),
-                                  DataCell(Text(val.ten.toString())),
-                                  DataCell(Text(val.eleven.toString())),
-                                  DataCell(Text(val.twelve.toString())),
-                                  DataCell(Text(val.thirteen.toString())),
-                                  DataCell(Text(val.fourteen.toString())),
-                                  DataCell(Text(val.fifteen.toString())),
-                                  DataCell(Text(val.sixteen.toString())),
-                                  DataCell(Text(val.seventeen.toString())),
-                                  DataCell(Text(val.eighteen.toString())),
-                                  DataCell(Text(val.nineteen.toString())),
-                                ],
-                              )),
-                        )
-                        .toList(),
+              const SizedBox(
+                height: 38,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: BarChart(
+                    BarChartData(
+                      maxY: 20,
+                      minY: 0,
+                      alignment: BarChartAlignment.spaceEvenly,
+                      barTouchData: BarTouchData(
+                          touchTooltipData: BarTouchTooltipData(
+                            tooltipBgColor: Colors.transparent,
+                            tooltipPadding: const EdgeInsets.all(0),
+                            tooltipBottomMargin: 8,
+                            getTooltipItem: (
+                                BarChartGroupData group,
+                                int groupIndex,
+                                BarChartRodData rod,
+                                int rodIndex,
+                                ) {
+                              return BarTooltipItem(
+                                rod.y.round().toString(),
+                                TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          ),
+                          touchCallback: (response) {
+                            if (response.spot == null) {
+                              setState(() {
+                                touchedGroupIndex = -1;
+                                showingBarGroups = List.of(rawBarGroups);
+                              });
+                              return;
+                            }
+
+                            touchedGroupIndex = response.spot!.touchedBarGroupIndex;
+
+                            setState(() {
+                              if (response.touchInput is PointerExitEvent ||
+                                  response.touchInput is PointerUpEvent) {
+                                touchedGroupIndex = -1;
+                                showingBarGroups = List.of(rawBarGroups);
+                              } else {
+                                showingBarGroups = List.of(rawBarGroups);
+                                if (touchedGroupIndex != -1) {
+                                  var sum = 0.0;
+                                  for (var rod in showingBarGroups[touchedGroupIndex].barRods) {
+                                    sum += rod.y;
+                                  }
+                                  final avg =
+                                      sum / showingBarGroups[touchedGroupIndex].barRods.length;
+
+                                  showingBarGroups[touchedGroupIndex] =
+                                      showingBarGroups[touchedGroupIndex].copyWith(
+                                        barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
+                                          return rod.copyWith(y: avg);
+                                        }).toList(),
+                                      );
+                                }
+                              }
+                            });
+                          }),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: BarTitles.getTopBottomTitles(),
+                        leftTitles: BarTitles.getSideTitles(),
+                        rightTitles: BarTitles.getSideTitles(),
+                      ),
+                      gridData: FlGridData(
+                        checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
+                        getDrawingHorizontalLine: (value) {
+                          if (value == 0) {
+                            return FlLine(
+                              color: Color(0xffF5F5F5),
+                              strokeWidth: 3,
+                            );
+                          } else {
+                            return FlLine(
+                              color: Color(0xffe4e5ed),
+                              strokeWidth: 0.8,
+                            );
+                          }
+                        },
+                      ),
+                      borderData: FlBorderData(
+                          border: Border(
+                            top: BorderSide.none,
+                            right: BorderSide.none,
+                            left: BorderSide(
+                                width: 0.8,
+                                color:Color(0xffdcdcdc),
+                            ),
+                            bottom: BorderSide(
+                                width: 0.8,
+                                color: Color(0xffdcdcdc)
+                            ),
+                          )),
+                      barGroups: showingBarGroups,
+                    ),
                   ),
                 ),
               ),
-            ),
+              const SizedBox(
+                height: 12,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
-}
 
-class User {
-  final String seven;
-  final int eight;
-  final int nine;
-  final int ten;
-  final int eleven;
-  final int twelve;
-  final int thirteen;
-  final int fourteen;
-  final int fifteen;
-  final int sixteen;
-  final int seventeen;
-  final int eighteen;
-  final int nineteen;
+  BarChartGroupData makeGroupData(int x, double y1, double y2) {
+    return BarChartGroupData(
+      barsSpace: 2,
+      x: x,
+      barRods: [
+        BarChartRodData(
+          y: y1,
+          colors: [leftBarColorOne],
+          width: width,
+          borderRadius:BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          )
+        ),
+        BarChartRodData(
+          y: y2,
+          colors: [rightBarColorOne],
+          width: width,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+        ),
+      ],
+      showingTooltipIndicators: [0,1],
+    );
+  }
 
-  User(
-    this.seven,
-    this.eight,
-    this.nine,
-    this.ten,
-    this.eleven,
-    this.twelve,
-    this.thirteen,
-    this.fourteen,
-    this.fifteen,
-    this.sixteen,
-    this.seventeen,
-    this.eighteen,
-    this.nineteen,
-  );
 }
