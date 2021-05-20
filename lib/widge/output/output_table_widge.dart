@@ -43,6 +43,15 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
     final barGroup12 = makeGroupData(11, 17, 6);
     final barGroup13 = makeGroupData(12, 19, 1.5);
     final barGroup14 = makeGroupData(13, 10, 1.5);
+    final barGroup15 = makeGroupData(0, 5, 12);
+    final barGroup16 = makeGroupData(1, 16, 12);
+    final barGroup17 = makeGroupData(2, 18, 5);
+    final barGroup18 = makeGroupData(3, 20, 16);
+    final barGroup19 = makeGroupData(4, 17, 6);
+    final barGroup20 = makeGroupData(5, 19, 1.5);
+    final barGroup21 = makeGroupData(6, 10, 1.5);
+    final barGroup22 = makeGroupData(7, 5, 12);
+    final barGroup23 = makeGroupData(8, 16, 12);
 
     final items = [
       barGroup1,
@@ -59,6 +68,15 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
       barGroup12,
       barGroup13,
       barGroup14,
+      barGroup15,
+      barGroup16,
+      barGroup17,
+      barGroup18,
+      barGroup19,
+      barGroup20,
+      barGroup21,
+      barGroup22,
+      barGroup23
     ];
 
     rawBarGroups = items;
@@ -256,7 +274,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
     return BarChartGroupData(
-      barsSpace: 2,
+      barsSpace: 0,
       x: x,
       barRods: [
         BarChartRodData(
