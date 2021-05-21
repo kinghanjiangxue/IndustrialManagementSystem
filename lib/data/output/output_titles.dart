@@ -20,7 +20,7 @@ class BarTitles {
     rotateAngle: 90,
     interval: BarData.interval.toDouble(),
     margin: 10,
-    reservedSize: 30,
-    getTitles: (double value) => value == 0 ? '0' : '${value.toInt()}k',
+    reservedSize: 15,
+    getTitles: (double value) => value == 0 ? '0' : '${value.toInt()}',
   );
 }

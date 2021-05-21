@@ -15,7 +15,7 @@ class _GenerateTableState extends State<GenerateTable> {
   List<User> _userList = [];
   fetchUsers() async {
     var data = await http
-        .get(Uri.parse('https://www.json-generator.com/api/json/get/bPWSZmYYgO?indent=2'));
+        .get(Uri.parse('https://next.json-generator.com/api/json/get/4kWGoCxF9'));
 
     var jsonData = json.decode(data.body);
 
@@ -89,7 +89,7 @@ class _GenerateTableState extends State<GenerateTable> {
                         .map(
                       ((val) => DataRow(
                         cells: <DataCell>[
-                          DataCell(Text(val.name)),
+                          DataCell(Text(val.name.toString())),
                           DataCell(Text(val.gender)),
                           DataCell(Text(val.age.toString())),
                           DataCell(Text(val.email)),
@@ -114,7 +114,7 @@ class _GenerateTableState extends State<GenerateTable> {
 }
 
 class User {
-  final String name;
+  final int name;
   final String gender;
   final int age;
   final String email;

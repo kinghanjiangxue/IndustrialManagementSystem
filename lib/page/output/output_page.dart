@@ -11,21 +11,20 @@ class TestingPage extends StatelessWidget {
       centerTitle: true,
       backgroundColor: Color(0xff3875F6),
 
-
       actions: [
         Container(
-          width: 230,
+          width: 200,
           padding: const EdgeInsets.only(
               right: 10,
           ),
-          child:FilterSelectTable(title: "title"),
+          child:FilterSelectTable(),
         ),
       ],
     ),
     body: Padding(
       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
+        left: 5,
+        right: 5,
         top: 5,
         bottom: 5
       ),

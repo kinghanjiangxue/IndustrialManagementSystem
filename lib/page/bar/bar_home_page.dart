@@ -5,6 +5,7 @@ class BarHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Scaffold(
+        backgroundColor: Color(0xffe4e5e9),
         appBar: AppBar(
           title: Text('柱状图'),
           centerTitle: true,
@@ -12,7 +13,7 @@ class BarHomePage extends StatelessWidget {
         ),
 
         body: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(5),
           child: PageView(
             children: [
               BarChartPage(),

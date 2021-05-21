@@ -12,10 +12,8 @@ class BarChartSample2 extends StatefulWidget {
 }
 
 class BarChartSample2State extends State<BarChartSample2> {
-  final Color leftBarColorOne = const Color(0xff53fdd7);
-  // final Color leftBarColorTwo = const Color(0xffffdd80);
-  final Color rightBarColorOne = const Color(0xffff5182);
-  // final Color rightBarColorTwo = const Color(0xff2bdb90);
+  final Color leftBarColorOne = const Color(0xff19A4A0);
+  final Color rightBarColorOne = const Color(0xffF75E50);
   final double width = 22;
 
   late List<BarChartGroupData> rawBarGroups;
@@ -56,9 +54,9 @@ class BarChartSample2State extends State<BarChartSample2> {
       child: Card(
         elevation: 0,
         // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        color: const Color(0xff020227),
+        color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -70,11 +68,12 @@ class BarChartSample2State extends State<BarChartSample2> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   const SizedBox(
-                    width: 38,
+                    width: 100,
+                    height: 50,
                   ),
                   const Text(
                     'Productions',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    style: TextStyle(color: Colors.black, fontSize: 22),
                   ),
                   const SizedBox(
                     width: 4,
@@ -87,7 +86,7 @@ class BarChartSample2State extends State<BarChartSample2> {
                     width: 50,
                   ),
                   Container(
-                    color: Color(0xff53fdd7),
+                    color: Color(0xff19A4A0),
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,
@@ -103,7 +102,7 @@ class BarChartSample2State extends State<BarChartSample2> {
                     width: 10,
                   ),
                   Container(
-                    color: Color(0xffff5182),
+                    color: Color(0xffF75E50),
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,
@@ -119,15 +118,15 @@ class BarChartSample2State extends State<BarChartSample2> {
                 ],
 
               ),
-              const SizedBox(
-                height: 38,
-              ),
+              // const SizedBox(
+              //   height: 38,
+              // ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: BarChart(
                     BarChartData(
-                      maxY: 20,
+                      maxY: 25,
                       minY: 0,
                       alignment: BarChartAlignment.spaceEvenly,
                       barTouchData: BarTouchData(
@@ -144,8 +143,8 @@ class BarChartSample2State extends State<BarChartSample2> {
                               return BarTooltipItem(
                                 rod.y.round().toString(),
                                 TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  // fontWeight: FontWeight.bold,
                                 ),
                               );
                             },
@@ -197,12 +196,12 @@ class BarChartSample2State extends State<BarChartSample2> {
                         getDrawingHorizontalLine: (value) {
                           if (value == 0) {
                             return FlLine(
-                              color: Color(0xff363753),
+                              color: Color(0xffF5F5F5),
                               strokeWidth: 3,
                             );
                           } else {
                             return FlLine(
-                              color: const Color(0xff2a2747),
+                              color: Color(0xffe4e5ed),
                               strokeWidth: 0.8,
                             );
                           }
@@ -213,12 +212,12 @@ class BarChartSample2State extends State<BarChartSample2> {
                             top: BorderSide.none,
                             right: BorderSide.none,
                             left: BorderSide(
-                              width: 3,
-                              color: Color(0xff363753)
+                              width: 0.8,
+                              color:Color(0xffdcdcdc),
                             ),
                             bottom: BorderSide(
-                                width: 1,
-                                color: Color(0xff363753)
+                                width: 0.8,
+                                color: Color(0xffdcdcdc)
                             ),
                           )),
                       barGroups: showingBarGroups,
@@ -238,37 +237,27 @@ class BarChartSample2State extends State<BarChartSample2> {
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
     return BarChartGroupData(
-      barsSpace: 4,
+      barsSpace: 2,
       x: x,
       barRods: [
       BarChartRodData(
         y: y1,
         colors: [leftBarColorOne],
         width: width,
-        borderRadius: y1 > 0
-            ? BorderRadius.only(
-          topLeft: Radius.circular(6),
-          topRight: Radius.circular(6),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(4),
+          topRight: Radius.circular(4),
         )
-            : BorderRadius.only(
-          bottomLeft: Radius.circular(6),
-          bottomRight: Radius.circular(6),
-        ),
       ),
       BarChartRodData(
 
         y: y2,
         colors: [rightBarColorOne],
         width: width,
-        borderRadius: y2 > 0
-            ? BorderRadius.only(
-          topLeft: Radius.circular(6),
-          topRight: Radius.circular(6),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(4),
+          topRight: Radius.circular(4),
         )
-            : BorderRadius.only(
-          bottomLeft: Radius.circular(6),
-          bottomRight: Radius.circular(6),
-        ),
       ),
     ],
       showingTooltipIndicators: [0,1],

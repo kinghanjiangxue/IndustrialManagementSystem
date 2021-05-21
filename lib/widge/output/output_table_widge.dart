@@ -29,7 +29,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
   @override
   void initState() {
     super.initState();
-    final barGroup1 = makeGroupData(0, 5, 12);
+    final barGroup1 = makeGroupData(0, 5, 24);
     final barGroup2 = makeGroupData(1, 16, 12);
     final barGroup3 = makeGroupData(2, 18, 5);
     final barGroup4 = makeGroupData(3, 20, 16);
@@ -163,7 +163,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: BarChart(
                     BarChartData(
-                      maxY: 20,
+                      maxY: 30,
                       minY: 0,
                       alignment: BarChartAlignment.spaceEvenly,
                       barTouchData: BarTouchData(
@@ -181,7 +181,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                                 rod.y.round().toString(),
                                 TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
                                 ),
                               );
                             },
@@ -263,7 +263,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                 ),
               ),
               const SizedBox(
-                height: 12,
+                height: 20,
               ),
             ],
           ),
