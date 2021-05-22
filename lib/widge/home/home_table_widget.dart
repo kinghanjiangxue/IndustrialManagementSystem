@@ -47,7 +47,7 @@ class _GenerateTableState extends State<GenerateTable> {
           // Text(
           //   "User Details",
           //   style: TextStyle(
-          //     fontSize: 20,
+          //     fontSize: 50,
           //   ),
           // ),
           Container(
