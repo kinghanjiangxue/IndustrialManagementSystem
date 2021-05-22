@@ -2,7 +2,7 @@ import 'package:universe/data/drawer_items.dart';
 import 'package:universe/model/home/drawer_item.dart';
 import 'package:universe/page/deployment_page.dart';
 import 'package:universe/page/pie/pie_home_page.dart';
-import 'package:universe/page/performance_page.dart';
+import 'package:universe/page/history/history_page.dart';
 import 'package:universe/page/resources_page.dart';
 import 'package:universe/page/bar/bar_home_page.dart';
 import 'package:universe/page/output/output_page.dart';
