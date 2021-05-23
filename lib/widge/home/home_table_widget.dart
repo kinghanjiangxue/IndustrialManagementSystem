@@ -1,42 +1,61 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:universe/model/home/home_data_model.dart';
 
 class GenerateTable extends StatefulWidget {
-  // const GenerateTable({Key key}) : super(key: key);
-
-  static const routeName = '/table';
-
   @override
   _GenerateTableState createState() => _GenerateTableState();
 }
 
 class _GenerateTableState extends State<GenerateTable> {
-  List<User> _userList = [];
+
+  List<HomeDataModel> _dataList = [];
+   HomeTitleModel? homeTitleModel;
+
+
   fetchUsers() async {
-    var data = await http
-        .get(Uri.parse('https://next.json-generator.com/api/json/get/4kWGoCxF9'));
 
-    var jsonData = json.decode(data.body);
+    var titleData = await http.get(
+        Uri.parse('https://next.json-generator.com/api/json/get/E1HniUQF9'));
+    if (titleData.statusCode == 200) {
 
-    List<User> users = [];
+      Map<String, dynamic>  titles = json.decode(titleData.body);
 
-    for (var i in jsonData) {
-      User user = User(i['name'], i['gender'], i['age'], i['email'],
-          i['eyeColor'], i['phone'], i['company']);
-      users.add(user);
-      print(user.eyeColor);
+
+      setState(() {
+        var _homeTitleModel = new HomeTitleModel.fromTitleJson(titles);
+        // homeTitleModel = _homeTitleModel;
+        // // Map<String, dynamic> myMap = new Map<String, dynamic>.from(titles);
+        // // homeTitleModel = titles.map((json) => HomeTitleModel.fromTitleJson(json));
+        // homeTitleModel = Map<String, dynamic>.from(titles); => HomeTitleModel.fromTitleJson(json))
+      });
+    } else {
+      print("err code $titleData.statusCode");
     }
-    print(users.length);
-    this.setState(() {
-      _userList = users;
-    });
+
+    var data = await http.get(
+        Uri.parse('https://next.json-generator.com/api/json/get/4J__XazFq'));
+    if (data.statusCode == 200) {
+      List top = json.decode(data.body);
+      setState(() {
+        _dataList = top.map((json) => HomeDataModel.fromJson(json)).toList();
+      });
+    } else {
+      print("err code $data.statusCode");
+    }
   }
 
   @override
   void initState() {
-    fetchUsers();
+    // fetchUsers().whenCom;
     super.initState();
+
+    fetchUsers().whenComplete((){
+      setState(() {});
+    });
   }
 
   @override
@@ -50,9 +69,7 @@ class _GenerateTableState extends State<GenerateTable> {
           //     fontSize: 50,
           //   ),
           // ),
-          Container(
-
-          ),
+          Container(),
 
           Expanded(
             child: Container(
@@ -75,53 +92,48 @@ class _GenerateTableState extends State<GenerateTable> {
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
                     columns: [
-                      DataColumn(label: Text("机台序号")),
-                      DataColumn(label: Text("客户型号")),
-                      DataColumn(label: Text("产品规格")),
-                      DataColumn(label: Text("加工工序")),
-                      DataColumn(label: Text("当天产量")),
-                      DataColumn(label: Text("换机次数")),
-                      DataColumn(label: Text("负责人")),
-                      DataColumn(label: Text("质检员")),
-                      DataColumn(label: Text("备注")),
-                    ],
-                    rows: _userList
-                        .map(
-                      ((val) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text(val.name.toString())),
-                          DataCell(Text(val.gender)),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.email)),
-                          DataCell(Text(val.eyeColor)),
-                          DataCell(Text(val.phone)),
-                          DataCell(Text(val.company)),
-                          DataCell(Text("")),
-                          DataCell(Text("")),
-                        ],
-                      )),
-                    )
+                      // DataColumn(label: Text(homeTitleModel!.titleNumber)),
+                      // DataColumn(label: Text(homeTitleModel!.titleCustomerModel)),
+                      // DataColumn(label: Text(homeTitleModel!.titleProductSpecification)),
+                      // DataColumn(label: Text(homeTitleModel!.titleProcessing)),
+                      // DataColumn(label: Text(homeTitleModel!.titleDailyOutput)),
+                      // DataColumn(label: Text(homeTitleModel!.titleNumberChanges)),
+                      // DataColumn(label: Text(homeTitleModel!.titleChief)),
+                      // DataColumn(label: Text(homeTitleModel!.titleQualityInspector)),
+                      // DataColumn(label: Text(homeTitleModel!.titleRemarks)),
+
+
+                      DataColumn(label: Text("")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel.titleProductSpecification")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text("homeTitleModel")),
+                      ],
+                    rows: _dataList
+                        .map((homeModel) => DataRow(cells: <DataCell>[
+                              DataCell(Text(homeModel.id.toString())),
+                              DataCell(Text(homeModel.customerModel)),
+                              DataCell(Text(homeModel.productSpecification)),
+                              DataCell(Text(homeModel.processing)),
+                              DataCell(Text(homeModel.dailyOutput.toString())),
+                              DataCell(
+                                  Text(homeModel.numberChanges.toString())),
+                              DataCell(Text(homeModel.chief)),
+                              DataCell(Text(homeModel.qualityInspector)),
+                              DataCell(Text(homeModel.remarks)),
+                            ]))
                         .toList(),
                   ),
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
-}
-
-class User {
-  final int name;
-  final String gender;
-  final int age;
-  final String email;
-  final String eyeColor;
-  final String phone;
-  final String company;
-
-  User(this.name, this.gender, this.age, this.email, this.eyeColor, this.phone,
-      this.company);
 }
