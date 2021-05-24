@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,24 +11,16 @@ class GenerateTable extends StatefulWidget {
 class _GenerateTableState extends State<GenerateTable> {
 
   List<HomeDataModel> _dataList = [];
-   HomeTitleModel? homeTitleModel;
-
+  var homeTitleModel = HomeTitleModel();
 
   fetchUsers() async {
-
     var titleData = await http.get(
         Uri.parse('https://next.json-generator.com/api/json/get/E1HniUQF9'));
     if (titleData.statusCode == 200) {
 
       Map<String, dynamic>  titles = json.decode(titleData.body);
-
-
       setState(() {
-        var _homeTitleModel = new HomeTitleModel.fromTitleJson(titles);
-        // homeTitleModel = _homeTitleModel;
-        // // Map<String, dynamic> myMap = new Map<String, dynamic>.from(titles);
-        // // homeTitleModel = titles.map((json) => HomeTitleModel.fromTitleJson(json));
-        // homeTitleModel = Map<String, dynamic>.from(titles); => HomeTitleModel.fromTitleJson(json))
+        homeTitleModel = HomeTitleModel.fromTitleJson(titles);
       });
     } else {
       print("err code $titleData.statusCode");
@@ -69,7 +59,9 @@ class _GenerateTableState extends State<GenerateTable> {
           //     fontSize: 50,
           //   ),
           // ),
-          Container(),
+          Container(
+
+          ),
 
           Expanded(
             child: Container(
@@ -92,26 +84,15 @@ class _GenerateTableState extends State<GenerateTable> {
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
                     columns: [
-                      // DataColumn(label: Text(homeTitleModel!.titleNumber)),
-                      // DataColumn(label: Text(homeTitleModel!.titleCustomerModel)),
-                      // DataColumn(label: Text(homeTitleModel!.titleProductSpecification)),
-                      // DataColumn(label: Text(homeTitleModel!.titleProcessing)),
-                      // DataColumn(label: Text(homeTitleModel!.titleDailyOutput)),
-                      // DataColumn(label: Text(homeTitleModel!.titleNumberChanges)),
-                      // DataColumn(label: Text(homeTitleModel!.titleChief)),
-                      // DataColumn(label: Text(homeTitleModel!.titleQualityInspector)),
-                      // DataColumn(label: Text(homeTitleModel!.titleRemarks)),
-
-
-                      DataColumn(label: Text("")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel.titleProductSpecification")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel")),
-                      DataColumn(label: Text("homeTitleModel")),
+                      DataColumn(label: Text(homeTitleModel.titleNumber.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleCustomerModel.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleProductSpecification.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleProcessing.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleDailyOutput.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleNumberChanges.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleChief.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleQualityInspector.toString())),
+                      DataColumn(label: Text(homeTitleModel.titleRemarks.toString())),
                       ],
                     rows: _dataList
                         .map((homeModel) => DataRow(cells: <DataCell>[
