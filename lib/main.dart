@@ -46,7 +46,13 @@ class _MainPageState extends State<MainPage> {
       title: Text(MyApp.title),
       centerTitle: true,
     ),
-    body: Center(
+    body: Padding(
+      padding: EdgeInsets.only(
+        left: 320,
+        right: 250,
+        top: 0,
+        bottom: 20,
+      ),
       child:GenerateTable() ,
     ),
   );

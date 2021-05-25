@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:universe/model/home/home_data_model.dart';
+import 'package:universe/page/pie/pie_chart_page.dart';
 
 class GenerateTable extends StatefulWidget {
   @override
@@ -40,7 +41,6 @@ class _GenerateTableState extends State<GenerateTable> {
 
   @override
   void initState() {
-    // fetchUsers().whenCom;
     super.initState();
 
     fetchUsers().whenComplete((){
@@ -51,8 +51,13 @@ class _GenerateTableState extends State<GenerateTable> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Row(
         children: <Widget>[
+          // Expanded(child: PageView(
+          //   children: [
+          //     PieChartPage(),
+          //   ],
+          // ),),
           // Text(
           //   "User Details",
           //   style: TextStyle(
@@ -60,8 +65,8 @@ class _GenerateTableState extends State<GenerateTable> {
           //   ),
           // ),
           Container(
+            child: PieChartPage(),),
 
-          ),
 
           Expanded(
             child: Container(
@@ -77,12 +82,13 @@ class _GenerateTableState extends State<GenerateTable> {
                   )
                 ],
               ),
-              margin: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
+                    columnSpacing: 30,
                     columns: [
                       DataColumn(label: Text(homeTitleModel.titleNumber.toString())),
                       DataColumn(label: Text(homeTitleModel.titleCustomerModel.toString())),

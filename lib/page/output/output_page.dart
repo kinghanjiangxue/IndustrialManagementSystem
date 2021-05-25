@@ -15,7 +15,10 @@ class TestingPage extends StatelessWidget {
         Container(
           width: 200,
           padding: const EdgeInsets.only(
-              right: 10,
+              left: 200,
+              right: 20,
+              top: 20,
+              bottom: 20
           ),
           child:FilterSelectTable(),
         ),
