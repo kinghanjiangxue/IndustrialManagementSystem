@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:universe/widge/history/history_widge.dart';
+import 'package:universe/widget/history/history_widget.dart';
 
 class PerformancePage extends StatelessWidget {
   @override

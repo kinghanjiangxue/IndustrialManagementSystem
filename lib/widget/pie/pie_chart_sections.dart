@@ -1,5 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:universe/data/pie_data.dart';
+import 'package:universe/data/pie/pie_data.dart';
 import 'package:flutter/material.dart';
 
 List<PieChartSectionData> getSections(int touchedIndex) => PieData.data

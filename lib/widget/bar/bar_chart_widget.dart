@@ -12,6 +12,7 @@ class BarChartSample2 extends StatefulWidget {
 }
 
 class BarChartSample2State extends State<BarChartSample2> {
+  static int intervalSpace = 5;
   final Color leftBarColorOne = const Color(0xff19A4A0);
   final Color rightBarColorOne = const Color(0xffF75E50);
   final double width = 22;
@@ -53,7 +54,6 @@ class BarChartSample2State extends State<BarChartSample2> {
       aspectRatio: 1,
       child: Card(
         elevation: 0,
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(0),
@@ -114,13 +114,9 @@ class BarChartSample2State extends State<BarChartSample2> {
                     '今日产量',
                     style: TextStyle(color: Color(0xff77839a), fontSize: 16),
                   ),
-
                 ],
-
               ),
-              // const SizedBox(
-              //   height: 38,
-              // ),
+
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -192,7 +188,7 @@ class BarChartSample2State extends State<BarChartSample2> {
                         rightTitles: BarTitles.getSideTitles(),
                       ),
                       gridData: FlGridData(
-                        checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
+                        checkToShowHorizontalLine: (value) => value % intervalSpace == 0,
                         getDrawingHorizontalLine: (value) {
                           if (value == 0) {
                             return FlLine(
@@ -242,21 +238,20 @@ class BarChartSample2State extends State<BarChartSample2> {
       barRods: [
       BarChartRodData(
         y: y1,
-        colors: [leftBarColorOne],
+        colors: [leftBarColorOne,],
         width: width,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(4),
-          topRight: Radius.circular(4),
+          topLeft: Radius.circular(3),
+          topRight: Radius.circular(3),
         )
       ),
       BarChartRodData(
-
         y: y2,
         colors: [rightBarColorOne],
         width: width,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(4),
-          topRight: Radius.circular(4),
+          topLeft: Radius.circular(3),
+          topRight: Radius.circular(3),
         )
       ),
     ],

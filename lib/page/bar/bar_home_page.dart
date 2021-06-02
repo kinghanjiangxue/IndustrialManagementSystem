@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:universe/page/bar/bar_chart_page.dart';
+import 'package:universe/widget/bar/bar_chart_widget.dart';
 
 class BarHomePage extends StatelessWidget {
   @override
@@ -7,7 +7,7 @@ class BarHomePage extends StatelessWidget {
       Scaffold(
         backgroundColor: Color(0xffe4e5e9),
         appBar: AppBar(
-          title: Text('柱状图'),
+          title: Text('图表界面'),
           centerTitle: true,
           backgroundColor: Color(0xff3875F6),
         ),
@@ -16,7 +16,7 @@ class BarHomePage extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: PageView(
             children: [
-              BarChartPage(),
+              BarChartSample2(),
             ],
           ),
         ),

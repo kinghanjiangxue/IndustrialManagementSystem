@@ -1,4 +1,4 @@
-import 'package:universe/data/pie_data.dart';
+import 'package:universe/data/pie/pie_data.dart';
 import 'package:flutter/material.dart';
 
 class IndicatorsWidget extends StatelessWidget {

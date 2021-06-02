@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class BarData {
 
-  static int interval = 5;
+  // static int interval = 5;
   static List<Data> barData = [
     Data(
       id: 0,

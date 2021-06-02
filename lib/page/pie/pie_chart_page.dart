@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:universe/widge/pie/indicators_widget.dart';
-import 'package:universe/widge/pie/pie_chart_sections.dart';
+import 'package:universe/widget/pie/pie_indicators_widget.dart';
+import 'package:universe/widget/pie/pie_chart_sections.dart';
 import 'package:flutter/material.dart';
 
 class PieChartPage extends StatefulWidget {

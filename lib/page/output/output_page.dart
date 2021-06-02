@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:universe/widge/output/output_table_widge.dart';
-import 'package:universe/widge/output/output_select_widge.dart';
+import 'package:universe/widget/output/output_table_widget.dart';
+import 'package:universe/widget/output/output_select_widget.dart';
 
 class TestingPage extends StatelessWidget {
   @override
