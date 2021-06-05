@@ -171,7 +171,7 @@ class _MainPageState extends State<MainPage> {
                           children: <Widget>[
                             Image.asset(
                               // 皇冠标识
-                              'images/first.png',
+                              'images/third.png',
                               width: 90,
                               height: 90,
                             ),

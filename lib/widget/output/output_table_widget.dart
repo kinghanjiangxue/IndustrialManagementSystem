@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
-// import 'package:universe/data/bar/bar_data.dart';
+// import 'package:universe/data/bar/bar_chart_model.dart';
 import 'package:universe/data/output/output_titles.dart';
 import 'package:universe/data/output/output_data.dart';
 

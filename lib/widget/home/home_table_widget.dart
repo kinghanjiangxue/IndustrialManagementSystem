@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:universe/model/home/home_data_model.dart';
+import 'package:universe/widget/common/progress_hud.dart';
 
 class GenerateTable extends StatefulWidget {
   @override
@@ -14,12 +15,11 @@ class _GenerateTableState extends State<GenerateTable> {
   var homeTitleModel = HomeTitleModel();
   static double  columnFont = 16;
   static double  rowFont = 16;
-  // static String columnFontFamily = "RobotoMono";
   static String rowFontFamily = "RobotoMono";
 
   fetchUsers() async {
     var titleData = await http.get(
-        Uri.parse('https://next.json-generator.com/api/json/get/EkFdkV1c5'));
+        Uri.parse('http://www.json-generator.com/api/json/get/bUcSgvZPEy?indent=2'));
     if (titleData.statusCode == 200) {
 
       Map<String, dynamic>  titles = json.decode(titleData.body);
@@ -31,7 +31,7 @@ class _GenerateTableState extends State<GenerateTable> {
     }
 
     var data = await http.get(
-        Uri.parse('https://next.json-generator.com/api/json/get/VJaq0Nk5q'));
+        Uri.parse('http://www.json-generator.com/api/json/get/bVRhCDbbpK?indent=2'));
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       setState(() {
@@ -52,6 +52,16 @@ class _GenerateTableState extends State<GenerateTable> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (_dataList.length == 0 ) {
+      return  Center(
+        child: ProgressHUD(
+          backgroundColor: Colors.black.withOpacity(0.6),
+          color: Colors.white,
+        ),
+      );
+    }
+
     return Scaffold(
       body: Column(
         children: <Widget>[
