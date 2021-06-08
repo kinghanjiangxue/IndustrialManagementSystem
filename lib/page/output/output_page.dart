@@ -1,41 +1,104 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:universe/widget/output/output_table_widget.dart';
-import 'package:universe/widget/output/output_select_widget.dart';
+import 'package:http/http.dart' as http;
+import 'package:universe/model/output/output_filter_model.dart';
 
-class TestingPage extends StatelessWidget {
+class OutputPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Color(0xffe4e5e9),
-    appBar: AppBar(
-      title: Text("机器实时对比数据"),
-      centerTitle: true,
-      backgroundColor: Color(0xff3875F6),
-
-      actions: [
-        Container(
-          width: 200,
-          padding: const EdgeInsets.only(
-              left: 200,
-              right: 20,
-              top: 20,
-              bottom: 20
-          ),
-          child:FilterSelectTable(),
-        ),
-      ],
-    ),
-    body: Padding(
-      padding: const EdgeInsets.only(
-        left: 5,
-        right: 5,
-        top: 5,
-        bottom: 5
-      ),
-      child: PageView(
-        children: [GenerateOutputTable(),],
-      ),
-    ),
-  );
+  _OutputPageState createState() => _OutputPageState();
 }
 
+class _OutputPageState extends State<OutputPage> {
+  List<OutputFilterModel> _filterTitleList = [];
+
+  Widget tableWidgets  = Container();
+
+  fetchData() async {
+    var data = await http.get(Uri.parse(
+        'http://www.json-generator.com/api/json/get/cfiANsyatK?indent=2'));
+    if (data.statusCode == 200) {
+      List top = json.decode(data.body);
+      setState(() {
+        _filterTitleList =
+            top.map((json) => OutputFilterModel.fromJson(json)).toList();
+        OutputFilterModel filterTitleModel = _filterTitleList.first;
+        this.filterTitle = filterTitleModel.modelTitle;
+      });
+    } else {
+      print("err code $data.statusCode");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData().whenComplete(() {
+      setState(() {
+      });
+    });
+  }
+
+  String filterTitle = '请选择';
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      backgroundColor: Color(0xffe4e5e9),
+      appBar: AppBar(
+        title: Text("分段产能"),
+        centerTitle: true,
+        backgroundColor: Color(0xff3875F6),
+        actions: [
+          Container(
+            // width: 100,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            margin: EdgeInsets.all(10.0),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                dropdownColor: Colors.blueAccent,
+                value: this.filterTitle,
+                enableFeedback: true,
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.white,
+                ),
+                items: _filterTitleList
+                    .map((item) => DropdownMenuItem<String>(
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 0),
+                              Text(
+                                item.modelTitle,
+                                style: TextStyle(
+                                  // fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          value: item.modelTitle,
+                        ))
+                    .toList(),
+                onChanged: (value) => setState(() {
+                  this.filterTitle = value!;
+                }),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+        child: PageView(
+          children: [
+            GenerateOutputTable(modelNumber: this.filterTitle),
+          ],
+        ),
+      ),
+    );
+  }
+}
 

@@ -1,97 +1,131 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
-import 'dart:convert';import 'package:fl_chart/fl_chart.dart';
+import 'dart:convert';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
-// import 'package:universe/data/bar/bar_chart_model.dart';
-import 'package:universe/data/output/output_titles.dart';
-import 'package:universe/data/output/output_data.dart';
+import 'package:universe/widget/common/progress_hud.dart';
+import 'package:universe/model/output/output_char_title_model.dart';
+import 'package:universe/model/output/output_chart_model.dart';
 
 
 class GenerateOutputTable extends StatefulWidget {
-  // const GenerateOutputTable({Key key}) : super(key: key);
 
-  // static const routeName = '/table';
+  final String? modelNumber;//机型
+
+  GenerateOutputTable({
+    Key? key,
+    this.modelNumber,
+  }) : super(key: key);
 
   @override
   _GenerateOutputTableState createState() => _GenerateOutputTableState();
 }
 
 class _GenerateOutputTableState extends State<GenerateOutputTable> {
-  final Color leftBarColorOne = const Color(0xffFA8FE9);
-  final Color rightBarColorOne = const Color(0xff5296FA);
-  final double width = 15;
+  static int intervalSpace = 5;
+  final Color leftBarColorOne = const Color(0xff19A4A0);
+  final Color rightBarColorOne = const Color(0xffF75E50);
+  final double width = 22;
 
-  late List<BarChartGroupData> rawBarGroups;
-  late List<BarChartGroupData> showingBarGroups;
+  List<BarChartGroupData> rawBarGroups = [];
+  List<BarChartGroupData> showingBarGroups = [];
+
+  List<OutputChartModel> _barChartDataList = [];
+  List<BarChartGroupData> temp = [];
+
+  List<TitleDataModel> _listTitleData = [];
 
   int touchedGroupIndex = -1;
+
+  fetchData() async {
+    //标题
+    print('title+${widget.modelNumber}');
+
+    var params = Map<String, String>();
+    params["filterTitle"] = widget.modelNumber!;
+    var titleData = await http.post(Uri.parse(
+        'http://www.json-generator.com/api/json/get/clOujSioky?indent=2'),
+        body: params,
+    );
+
+    if (titleData.statusCode == 200) {
+      List top = json.decode(titleData.body);
+      _listTitleData =
+          top.map((json) => TitleDataModel.fromJson(json)).toList();
+    } else {
+      print("err code $titleData.statusCode");
+    }
+
+    var data = await http.get(Uri.parse(
+        'http://www.json-generator.com/api/json/get/cezmrFZFWq?indent=2'));
+    if (data.statusCode == 200) {
+      List top = json.decode(data.body);
+      _barChartDataList =
+          top.map((json) => OutputChartModel.fromJson(json)).toList();
+
+      for (int i = 0; i < _barChartDataList.length; i++) {
+        OutputChartModel model = _barChartDataList[i];
+
+        var barGroup = makeGroupData(model.id?.toInt(),
+            model.columnOne?.toDouble(), model.columnTwo?.toDouble());
+
+        temp.add(barGroup);
+      }
+      rawBarGroups = temp;
+      showingBarGroups = rawBarGroups;
+    } else {
+      print("err code $data.statusCode");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    final barGroup1 = makeGroupData(0, 5, 24);
-    final barGroup2 = makeGroupData(1, 16, 12);
-    final barGroup3 = makeGroupData(2, 18, 5);
-    final barGroup4 = makeGroupData(3, 20, 16);
-    final barGroup5 = makeGroupData(4, 17, 6);
-    final barGroup6 = makeGroupData(5, 19, 1.5);
-    final barGroup7 = makeGroupData(6, 10, 1.5);
-    final barGroup8 = makeGroupData(7, 5, 12);
-    final barGroup9 = makeGroupData(8, 16, 12);
-    final barGroup10 = makeGroupData(9, 18, 5);
-    final barGroup11 = makeGroupData(10, 20, 16);
-    final barGroup12 = makeGroupData(11, 17, 6);
-    final barGroup13 = makeGroupData(12, 19, 1.5);
-    final barGroup14 = makeGroupData(13, 10, 1.5);
-    final barGroup15 = makeGroupData(0, 5, 12);
-    final barGroup16 = makeGroupData(1, 16, 12);
-    final barGroup17 = makeGroupData(2, 18, 5);
-    final barGroup18 = makeGroupData(3, 20, 16);
-    final barGroup19 = makeGroupData(4, 17, 6);
-    final barGroup20 = makeGroupData(5, 19, 1.5);
-    final barGroup21 = makeGroupData(6, 10, 1.5);
-    final barGroup22 = makeGroupData(7, 5, 12);
-    final barGroup23 = makeGroupData(8, 16, 12);
 
-    final items = [
-      barGroup1,
-      barGroup2,
-      barGroup3,
-      barGroup4,
-      barGroup5,
-      barGroup6,
-      barGroup7,
-      barGroup8,
-      barGroup9,
-      barGroup10,
-      barGroup11,
-      barGroup12,
-      barGroup13,
-      barGroup14,
-      barGroup15,
-      barGroup16,
-      barGroup17,
-      barGroup18,
-      barGroup19,
-      barGroup20,
-      barGroup21,
-      barGroup22,
-      barGroup23
-    ];
-
-    rawBarGroups = items;
-
-    showingBarGroups = rawBarGroups;
+    fetchData().whenComplete(() {
+      setState(() {});
+    });
   }
+
+  SideTitles getTopBottomTitles() => SideTitles(
+    showTitles: true,
+    getTextStyles: (value) =>
+    const TextStyle(color: Colors.black, fontSize: 13),
+    margin: 10,
+    getTitles: (value) => _listTitleData
+        .firstWhere((element) => element.id == value.toInt())
+        .name
+  );
+
+  static SideTitles getSideTitles() => SideTitles(
+    showTitles: true,
+    getTextStyles: (value) =>
+    const TextStyle(color: Colors.black, fontSize: 13),
+    rotateAngle: 90,
+    interval: 5.0,
+    margin: 10,
+    reservedSize: 30,
+    getTitles: (double value) => value == 0 ? '0' : '${value.toInt()}',
+  );
 
   @override
   Widget build(BuildContext context) {
+    if (_listTitleData.length == 0 || _barChartDataList.length == 0) {
+      return  Center(
+        child: ProgressHUD(
+          backgroundColor: Colors.black.withOpacity(0.6),
+          color: Colors.white,
+        ),
+      );
+    }
+
     return AspectRatio(
       aspectRatio: 1,
       child: Card(
         elevation: 0,
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        color: const Color(0xffffffff),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(0),
           child: Column(
@@ -105,8 +139,8 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   const SizedBox(
-                    height: 50,
                     width: 100,
+                    height: 50,
                   ),
                   const Text(
                     'Productions',
@@ -117,13 +151,13 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                   ),
                   const Text(
                     'state',
-                    style: TextStyle(color: Color(0xff999999), fontSize: 16),
+                    style: TextStyle(color: Color(0xff77839a), fontSize: 16),
                   ),
                   const SizedBox(
                     width: 50,
                   ),
                   Container(
-                    color: Color(0xffFA8FE9),
+                    color: Color(0xff19A4A0),
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,
@@ -133,13 +167,13 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                   ),
                   const Text(
                     '昨日产量',
-                    style: TextStyle(color: Color(0xff333333), fontSize: 16),
+                    style: TextStyle(color: Color(0xff77839a), fontSize: 16),
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Container(
-                    color: Color(0xff5296FA),
+                    color: Color(0xffF75E50),
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,
@@ -149,21 +183,16 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                   ),
                   const Text(
                     '今日产量',
-                    style: TextStyle(color: Color(0xff333333), fontSize: 16),
+                    style: TextStyle(color: Color(0xff77839a), fontSize: 16),
                   ),
-
                 ],
-
-              ),
-              const SizedBox(
-                height: 38,
               ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: BarChart(
                     BarChartData(
-                      maxY: 30,
+                      maxY: 35,
                       minY: 0,
                       alignment: BarChartAlignment.spaceEvenly,
                       barTouchData: BarTouchData(
@@ -195,7 +224,8 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                               return;
                             }
 
-                            touchedGroupIndex = response.spot!.touchedBarGroupIndex;
+                            touchedGroupIndex =
+                                response.spot!.touchedBarGroupIndex;
 
                             setState(() {
                               if (response.touchInput is PointerExitEvent ||
@@ -206,15 +236,22 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                                 showingBarGroups = List.of(rawBarGroups);
                                 if (touchedGroupIndex != -1) {
                                   var sum = 0.0;
-                                  for (var rod in showingBarGroups[touchedGroupIndex].barRods) {
+                                  for (var rod
+                                  in showingBarGroups[touchedGroupIndex]
+                                      .barRods) {
                                     sum += rod.y;
                                   }
-                                  final avg =
-                                      sum / showingBarGroups[touchedGroupIndex].barRods.length;
+                                  final avg = sum /
+                                      showingBarGroups[touchedGroupIndex]
+                                          .barRods
+                                          .length;
 
                                   showingBarGroups[touchedGroupIndex] =
-                                      showingBarGroups[touchedGroupIndex].copyWith(
-                                        barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
+                                      showingBarGroups[touchedGroupIndex]
+                                          .copyWith(
+                                        barRods: showingBarGroups[touchedGroupIndex]
+                                            .barRods
+                                            .map((rod) {
                                           return rod.copyWith(y: avg);
                                         }).toList(),
                                       );
@@ -224,12 +261,13 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                           }),
                       titlesData: FlTitlesData(
                         show: true,
-                        bottomTitles: BarTitles.getTopBottomTitles(),
-                        leftTitles: BarTitles.getSideTitles(),
-                        rightTitles: BarTitles.getSideTitles(),
+                        bottomTitles: getTopBottomTitles(),
+                        leftTitles: getSideTitles(),
+                        rightTitles: getSideTitles(),
                       ),
                       gridData: FlGridData(
-                        checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
+                        checkToShowHorizontalLine: (value) =>
+                        value % intervalSpace == 0,
                         getDrawingHorizontalLine: (value) {
                           if (value == 0) {
                             return FlLine(
@@ -249,13 +287,11 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                             top: BorderSide.none,
                             right: BorderSide.none,
                             left: BorderSide(
-                                width: 0.8,
-                                color:Color(0xffdcdcdc),
+                              width: 0.8,
+                              color: Color(0xffdcdcdc),
                             ),
-                            bottom: BorderSide(
-                                width: 0.8,
-                                color: Color(0xffdcdcdc)
-                            ),
+                            bottom:
+                            BorderSide(width: 0.8, color: Color(0xffdcdcdc)),
                           )),
                       barGroups: showingBarGroups,
                     ),
@@ -263,7 +299,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
             ],
           ),
@@ -272,32 +308,31 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
+  BarChartGroupData makeGroupData(int? x, double? y1, double? y2) {
     return BarChartGroupData(
-      barsSpace: 0,
+      barsSpace: 2,
       x: x,
       barRods: [
         BarChartRodData(
-          y: y1,
-          colors: [leftBarColorOne],
-          width: width,
-          borderRadius:BorderRadius.only(
-            topLeft: Radius.circular(4),
-            topRight: Radius.circular(4),
-          )
-        ),
+            y: y1,
+            colors: [
+              leftBarColorOne,
+            ],
+            width: width,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(3),
+              topRight: Radius.circular(3),
+            )),
         BarChartRodData(
-          y: y2,
-          colors: [rightBarColorOne],
-          width: width,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(4),
-            topRight: Radius.circular(4),
-          ),
-        ),
+            y: y2,
+            colors: [rightBarColorOne],
+            width: width,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(3),
+              topRight: Radius.circular(3),
+            )),
       ],
-      showingTooltipIndicators: [0,1],
+      showingTooltipIndicators: [0, 1],
     );
   }
-
 }

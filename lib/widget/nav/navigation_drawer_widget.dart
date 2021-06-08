@@ -1,7 +1,6 @@
-import 'package:universe/data/drawer_items.dart';
+import 'package:universe/data/nav/nav_drawer_items_data.dart';
 import 'package:universe/model/home/drawer_item.dart';
 import 'package:universe/page/deployment_page.dart';
-import 'package:universe/page/pie/pie_home_page.dart';
 import 'package:universe/page/history/history_page.dart';
 import 'package:universe/page/resources_page.dart';
 import 'package:universe/page/bar/bar_home_page.dart';
@@ -89,18 +88,15 @@ class NavigationDrawerWidget extends StatelessWidget {
         navigateTo(BarHomePage());
         break;
       case 1:
-        navigateTo(HomePiePage());
+        navigateTo(OutputPage());
         break;
       case 2:
-        navigateTo(TestingPage());
-        break;
-      case 3:
         navigateTo(PerformancePage());
         break;
-      case 4:
+      case 3:
         navigateTo(DeploymentPage());
         break;
-      case 5:
+      case 4:
         navigateTo(ResourcesPage());
         break;
     }

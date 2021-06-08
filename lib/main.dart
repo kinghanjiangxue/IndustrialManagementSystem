@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:universe/widget/home/home_table_widget.dart';
 import 'package:universe/page/home/home_pie_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +26,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => NavigationProvider(),
         child: MaterialApp(
+          localizationsDelegates:[GlobalMaterialLocalizations.delegate,GlobalWidgetsLocalizations.delegate],
+          supportedLocales: [Locale('zh','CH')],
           debugShowCheckedModeBanner: false,
           title: title,
-          theme: ThemeData(primarySwatch: Colors.deepOrange),
+          // theme: ThemeData(primarySwatch: Colors.deepOrange),
           home: MainPage(),
         ),
       );

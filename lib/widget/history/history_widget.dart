@@ -1,59 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:universe/model/home/home_data_model.dart';
+import 'package:universe/widget/common/progress_hud.dart';
 
 class GenerateTable extends StatefulWidget {
-  // const GenerateTable({Key key}) : super(key: key);
-
-  static const routeName = '/table';
+  const GenerateTable({Key? key}) : super(key: key);
 
   @override
   _GenerateTableState createState() => _GenerateTableState();
 }
 
 class _GenerateTableState extends State<GenerateTable> {
-  List<User> _userList = [];
+  List<HomeDataModel> _dataList = [];
+  var homeTitleModel = HomeTitleModel();
+  static double columnFont = 16;
+  static double rowFont = 16;
+  static String rowFontFamily = "RobotoMono";
+
   fetchUsers() async {
-    var data = await http
-        .get(Uri.parse('https://next.json-generator.com/api/json/get/4kWGoCxF9'));
-
-    var jsonData = json.decode(data.body);
-
-    List<User> users = [];
-
-    for (var i in jsonData) {
-      User user = User(i['name'], i['gender'], i['age'], i['email'],
-          i['eyeColor'], i['phone'], i['company']);
-      users.add(user);
-      print(user.eyeColor);
+    var titleData = await http.get(Uri.parse(
+        'http://www.json-generator.com/api/json/get/cePXXmWDiq?indent=2'));
+    if (titleData.statusCode == 200) {
+      Map<String, dynamic> titles = json.decode(titleData.body);
+      setState(() {
+        homeTitleModel = HomeTitleModel.fromTitleJson(titles);
+      });
+    } else {
+      print("err code $titleData.statusCode");
     }
-    print(users.length);
-    this.setState(() {
-      _userList = users;
-    });
+
+    var data = await http.get(Uri.parse(
+        'http://www.json-generator.com/api/json/get/cqVZUsJIJe?indent=2'));
+    if (data.statusCode == 200) {
+      List top = json.decode(data.body);
+      setState(() {
+        _dataList = top.map((json) => HomeDataModel.fromJson(json)).toList();
+      });
+    } else {
+      print("err code $data.statusCode");
+    }
   }
 
   @override
   void initState() {
-    fetchUsers();
     super.initState();
+    fetchUsers().whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    if (_dataList.length == 0) {
+      return Center(
+        child: ProgressHUD(
+          backgroundColor: Colors.black.withOpacity(0.6),
+          color: Colors.white,
+        ),
+      );
+    }
+
+    return Center(
+      child: Column(
         children: <Widget>[
-          // Text(
-          //   "User Details",
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //   ),
-          // ),
-          Container(
-
-          ),
-
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -62,66 +72,174 @@ class _GenerateTableState extends State<GenerateTable> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
-                    offset: const Offset(3.0, 3.0),
+                    // offset: const Offset(3.0, 3.0),
                     blurRadius: 5.0,
                     spreadRadius: 2.0,
                   )
                 ],
               ),
-              margin: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
+                    // columnSpacing: 40,
                     columns: [
-                      DataColumn(label: Text("机台序号")),
-                      DataColumn(label: Text("客户型号")),
-                      DataColumn(label: Text("产品规格")),
-                      DataColumn(label: Text("加工工序")),
-                      DataColumn(label: Text("当天产量")),
-                      DataColumn(label: Text("换机次数")),
-                      DataColumn(label: Text("负责人")),
-                      DataColumn(label: Text("质检员")),
-                      DataColumn(label: Text("备注")),
+                      DataColumn(
+                          label: Text(homeTitleModel.titleNumber.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                fontFamily: "Courier",
+                              ))),
+                      DataColumn(
+                          label:
+                              Text(homeTitleModel.titleCustomerModel.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: columnFont,
+                                    height: 1.2,
+                                    fontFamily: "Courier",
+                                  ))),
+                      DataColumn(
+                          label: Text(
+                              homeTitleModel.titleProductSpecification
+                                  .toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                fontFamily: "Courier",
+                              ))),
+                      DataColumn(
+                          label: Text(homeTitleModel.titleProcessing.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                fontFamily: "Courier",
+                              ))),
+                      DataColumn(
+                          label:
+                              Text(homeTitleModel.titleDailyOutput.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: columnFont,
+                                    height: 1.2,
+                                    fontFamily: "Courier",
+                                  ))),
+                      DataColumn(
+                          label:
+                              Text(homeTitleModel.titleNumberChanges.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: columnFont,
+                                    height: 1.2,
+                                    fontFamily: "Courier",
+                                  ))),
+                      DataColumn(
+                          label: Text(homeTitleModel.titleChief.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                fontFamily: "Courier",
+                              ))),
+                      DataColumn(
+                          label: Text(
+                              homeTitleModel.titleQualityInspector.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                // fontFamily: "RobotoMono",
+                              ))),
+                      DataColumn(
+                          label: Text(homeTitleModel.titleRemarks.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: columnFont,
+                                height: 1.2,
+                                fontFamily: "RobotoMono",
+                              ))),
                     ],
-                    rows: _userList
-                        .map(
-                      ((val) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text(val.name.toString())),
-                          DataCell(Text(val.gender)),
-                          DataCell(Text(val.age.toString())),
-                          DataCell(Text(val.email)),
-                          DataCell(Text(val.eyeColor)),
-                          DataCell(Text(val.phone)),
-                          DataCell(Text(val.company)),
-                          DataCell(Text("")),
-                          DataCell(Text("")),
-                        ],
-                      )),
-                    )
+                    rows: _dataList
+                        .map((homeModel) => DataRow(cells: <DataCell>[
+                              DataCell(Text(homeModel.id.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.customerModel,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.productSpecification,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.processing,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.dailyOutput.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.numberChanges.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.chief,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.qualityInspector,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                              DataCell(Text(homeModel.remarks,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: rowFont,
+                                    height: 1.2,
+                                    fontFamily: rowFontFamily,
+                                  ))),
+                            ]))
                         .toList(),
                   ),
                 ),
               ),
             ),
           ),
+
         ],
       ),
     );
   }
-}
-
-class User {
-  final int name;
-  final String gender;
-  final int age;
-  final String email;
-  final String eyeColor;
-  final String phone;
-  final String company;
-
-  User(this.name, this.gender, this.age, this.email, this.eyeColor, this.phone,
-      this.company);
 }
