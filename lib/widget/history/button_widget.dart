@@ -24,8 +24,8 @@ class ButtonWidget extends StatelessWidget {
     icon: Image.asset(
       // 图标
       'images/calendar.png',
-      width: 30,
-      height: 30,
+      width: 25,
+      height: 25,
     ),
 
     label: Text(
@@ -36,10 +36,12 @@ class ButtonWidget extends StatelessWidget {
   );
 }
 
-class DownloadDailyWidget extends StatelessWidget {
+
+///日报表PDF下载
+class DownloadDailyPDFWidget extends StatelessWidget {
   final VoidCallback onClicked;
 
-  const DownloadDailyWidget({
+  const DownloadDailyPDFWidget({
     Key? key,
     required this.onClicked,
   }) : super(key: key);
@@ -48,16 +50,45 @@ class DownloadDailyWidget extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
 
     iconSize: 25.0,
-    icon: Icon(Icons.file_download),
+    icon: Image.asset(
+      // 图标
+      'images/pdf.png',
+      width: 25,
+      height: 25,
+    ),
+    onPressed: onClicked,
+  );
+}
+
+///日报表Excel下载
+class DownloadDailyExcelWidget extends StatelessWidget {
+  final VoidCallback onClicked;
+
+  const DownloadDailyExcelWidget({
+    Key? key,
+    required this.onClicked,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+
+    iconSize: 25.0,
+    icon: Image.asset(
+      'images/excel.png',
+      width: 25,
+      height: 25,
+    ),
     onPressed: onClicked,
   );
 }
 
 
-class DownloadMonthWidget extends StatelessWidget {
+///月报表PDF下载
+
+class DownloadMonthPDFWidget extends StatelessWidget {
   final VoidCallback onClicked;
 
-  const DownloadMonthWidget({
+  const DownloadMonthPDFWidget({
     Key? key,
     required this.onClicked,
   }) : super(key: key);
@@ -66,7 +97,36 @@ class DownloadMonthWidget extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
 
     iconSize: 25.0,
-    icon: Icon(Icons.file_download),
+    icon: Image.asset(
+      // 图标
+      'images/pdf.png',
+      width: 25,
+      height: 25,
+    ),
+    onPressed: onClicked,
+  );
+}
+
+///月报表Excel载
+
+class DownloadMonthExcelWidget extends StatelessWidget {
+  final VoidCallback onClicked;
+
+  const DownloadMonthExcelWidget({
+    Key? key,
+    required this.onClicked,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+
+    iconSize: 25.0,
+    icon: Image.asset(
+      // 图标
+      'images/excel.png',
+      width: 25,
+      height: 25,
+    ),
     onPressed: onClicked,
   );
 }

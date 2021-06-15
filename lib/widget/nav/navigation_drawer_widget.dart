@@ -36,14 +36,14 @@ class NavigationDrawerWidget extends StatelessWidget {
               const SizedBox(height: 24),
               buildList(items: itemsFirst, isCollapsed: isCollapsed),
               const SizedBox(height: 24),
-              Divider(color: Colors.green),
-              const SizedBox(height: 24),
-              buildList(
-                indexOffset: itemsFirst.length,
-                items: itemsSecond,
-                isCollapsed: isCollapsed,
-              ),
-              Spacer(),
+              // Divider(color: Colors.green),
+              // const SizedBox(height: 24),
+              // buildList(
+              //   indexOffset: itemsFirst.length,
+              //   items: itemsSecond,
+              //   isCollapsed: isCollapsed,
+              // ),
+              // Spacer(),
               buildCollapseIcon(context, isCollapsed),
               const SizedBox(height: 12),
             ],
@@ -63,7 +63,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         shrinkWrap: true,
         primary: false,
         itemCount: items.length,
-        separatorBuilder: (context, index) => SizedBox(height: 16),
+        separatorBuilder: (context, index) => SizedBox(height: 40),
         itemBuilder: (context, index) {
           final item = items[index];
 
@@ -92,12 +92,6 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 2:
         navigateTo(PerformancePage());
-        break;
-      case 3:
-        navigateTo(DeploymentPage());
-        break;
-      case 4:
-        navigateTo(ResourcesPage());
         break;
     }
   }
