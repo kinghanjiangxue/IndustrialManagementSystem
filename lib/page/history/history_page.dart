@@ -4,110 +4,71 @@ import 'package:universe/widget/history/date_picker_widget.dart';
 import 'package:universe/widget/history/date_range_picker_widget.dart';
 import 'package:universe/widget/history/button_widget.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'dart:convert';
+import 'package:universe/widget/common/progress_hud.dart';
 
 class PerformancePage extends StatefulWidget {
   @override
   _PerformancePageState createState() => _PerformancePageState();
 }
 
+class _PerformancePageState extends State<PerformancePage> {
+  fetchCode(String fileName) async {
+    var titleData = await http.get(Uri.parse(
+        'http://www.json-generator.com/api/json/get/bTUyMSYoia?indent=2'));
 
-class _PerformancePageState extends State<PerformancePage>{
-
-
-
-  final Dio dio = Dio();
-  bool loading = false;
-  double progress = 0;
-
-  Future<bool> saveVideo(String url, String fileName) async {
-    Directory directory;
-    try {
-      if (Platform.isAndroid) {
-        if (await _requestPermission(Permission.storage)) {
-          directory = await getExternalStorageDirectory();
-          String newPath = "";
-          print(directory);
-          List<String> paths = directory.path.split("/");
-          for (int x = 1; x < paths.length; x++) {
-            String folder = paths[x];
-            if (folder != "Android") {
-              newPath += "/" + folder;
-            } else {
-              break;
-            }
-          }
-          newPath = newPath + "/RPSApp";
-          directory = Directory(newPath);
-        } else {
-          return false;
-        }
-      } else {
-        if (await _requestPermission(Permission.photos)) {
-          directory = await getTemporaryDirectory();
-        } else {
-          return false;
-        }
-      }
-      File saveFile = File(directory.path + "/$fileName");
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-      if (await directory.exists()) {
-        await dio.download(url, saveFile.path,
-            onReceiveProgress: (value1, value2) {
-              setState(() {
-                progress = value1 / value2;
-              });
-            });
-        if (Platform.isIOS) {
-          await ImageGallerySaver.saveFile(saveFile.path,
-              isReturnPathOfIOS: true);
-        }
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  Future<bool> _requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
+    if (titleData.statusCode == 200) {
+      Map<String, dynamic> titles = json.decode(titleData.body);
+      setState(() {
+        showCustomDialog(fileName, titles['url']);
+      });
     } else {
-      var result = await permission.request();
-      if (result == PermissionStatus.granted) {
-        return true;
-      }
+      print("err code $titleData.statusCode");
     }
-    return false;
   }
 
-  downloadFile() async {
-    setState(() {
-      loading = true;
-      progress = 0;
-    });
-    bool downloaded = await saveVideo(
-        "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-        "video.mp4");
-    if (downloaded) {
-      print("File Downloaded");
-    } else {
-      print("Problem Downloading File");
-    }
-    setState(() {
-      loading = false;
-    });
+  Future showCustomDialog(String fileName, String url) async {
+    var result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              fileName,
+              textAlign: TextAlign.center,
+            ),
+            content: UnconstrainedBox(
+              child: SizedBox(
+                width: 210,
+                height: 210,
+                child: Dialog(
+                  insetPadding: EdgeInsets.all(5),
+                  child: BarcodeWidget(
+                    barcode: Barcode.qrCode(),
+                    color: Colors.black,
+                    data: url.length > 0 ? url : '请重新扫码',
+                    width: 200,
+                    height: 200,
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                  "确定",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+    return result;
   }
-
 
   @override
   void initState() {
@@ -115,114 +76,95 @@ class _PerformancePageState extends State<PerformancePage>{
   }
 
   ///下载Excel日报表
-  void downloadDailyExcelFile() {
-    downloadFile();
-    print('下载Excel日报表');
-  }
-  ///下载pdf日报表
-  void downloadDailyPDFFile() {
-    print('下载pdf日报表');
+  void downloadDailyExcelFile(BuildContext context) {
+    fetchCode('扫码下载日报表(Excel版)');
   }
 
+  ///下载pdf日报表
+  void downloadDailyPDFFile(BuildContext context) {
+    fetchCode('扫码下载日报表(pdf版)');
+  }
 
   ///下载Excel月报表
-  void downloadMonthExcelFile() {
-    print('下载Excel月报表');
-  }
-  ///下载PDF月报表
-  void downloadMonthPDFFile() {
-    print('下载PDF月报表');
+  void downloadMonthExcelFile(BuildContext context) {
+    fetchCode('扫码下载月报表(Excel版)');
   }
 
+  ///下载PDF月报表
+  void downloadMonthPDFFile(BuildContext context) {
+    fetchCode('扫码下载月报表(pdf版)');
+  }
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     // backgroundColor: Colors.red,
-       appBar: AppBar(
-         title: Text('历史记录'),
-         centerTitle: true,
-         backgroundColor: Color(0xff3875F6),
-       ),
-       body: Center(
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           crossAxisAlignment: CrossAxisAlignment.end,
-           children: <Widget>[
-             SizedBox(
-               height: 10,
-             ),
-             Container(
-               child: Row(
-                 // textDirection: TextDirection.ltr,
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: <Widget>[
-                   Text(
-                     "日报表:",
-                     style: TextStyle(
-                       fontSize: 20,
-                       color: Colors.black,
-                     ),
-                   ),
-                   SizedBox(
-                     width: 10,
-                   ),
-                   DatePickerWidget(),
-                   DownloadDailyExcelWidget(
-                     onClicked: () => downloadDailyExcelFile(),
-                   ),
-                   DownloadDailyPDFWidget(
-                     onClicked: () => downloadDailyPDFFile(),
-                   ),
-                   SizedBox(
-                     width: 100,
-                   ),
-                   Text(
-                     "月报表:",
-                     style: TextStyle(
-                       fontSize: 20,
-                       color: Colors.black,
-                     ),
-                   ),
-                   SizedBox(
-                     width: 10,
-                   ),
-                   DateRangePickerWidget(),
-                   DownloadMonthExcelWidget(
-                     onClicked: () => downloadMonthExcelFile(),
-                   ),
-                   DownloadMonthPDFWidget(
-                     onClicked: () => downloadMonthPDFFile(),
-                   ),
-
-                 ],
-               ),
-             ),
-             SizedBox(
-               height: 10,
-             ),
-             Expanded(
-               child: GenerateTable(),
-             ),
-           ],
-         ),
-       ));
+    return Scaffold(
+        // backgroundColor: Colors.red,
+        appBar: AppBar(
+          title: Text('历史记录'),
+          centerTitle: true,
+          backgroundColor: Color(0xff3875F6),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Row(
+                  // textDirection: TextDirection.ltr,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "日报表:",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    DatePickerWidget(),
+                    DownloadDailyExcelWidget(
+                      onClicked: () => downloadDailyExcelFile(context),
+                    ),
+                    DownloadDailyPDFWidget(
+                      onClicked: () => downloadDailyPDFFile(context),
+                    ),
+                    SizedBox(
+                      width: 100,
+                    ),
+                    Text(
+                      "月报表:",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    DateRangePickerWidget(),
+                    DownloadMonthExcelWidget(
+                      onClicked: () => downloadMonthExcelFile(context),
+                    ),
+                    DownloadMonthPDFWidget(
+                      onClicked: () => downloadMonthPDFFile(context),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: GenerateTable(),
+              ),
+            ],
+          ),
+        ));
   }
 }
-// class PerformancePage extends StatelessWidget {
-//
-//   @override
-//   _PerformancePageState createState() => _PerformancePageState();
-//
-// }
-//
-//
-// class _PerformancePageState extends State<PerformancePage> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-//
-// }

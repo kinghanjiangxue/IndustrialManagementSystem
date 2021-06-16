@@ -32,10 +32,10 @@ dependencies:
   intl: ^0.17.0
   provider: ^5.0.0
   fl_chart: ^0.12.0
-  dio: ^3.0.10
-  path_provider: ^1.6.10
-  image_gallery_saver: ^1.6.6
-  permission_handler: ^5.0.1+1
+  # scan QR Code
+  flutter_barcode_scanner: ^1.0.1
+  # create QR Code
+  barcode_widget: ^1.5.0
   http:
 
 
