@@ -20,7 +20,8 @@ class _GenerateTableState extends State<GenerateTable> {
 
   fetchUsers() async {
     var titleData = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/cePXXmWDiq?indent=2'));
+        'https://api.json-generator.com/templates/dC3h8Maw1pw_/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
     if (titleData.statusCode == 200) {
       Map<String, dynamic> titles = json.decode(titleData.body);
       setState(() {
@@ -31,7 +32,8 @@ class _GenerateTableState extends State<GenerateTable> {
     }
 
     var data = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/cqVZUsJIJe?indent=2'));
+        'https://api.json-generator.com/templates/LsZteXDWDBct/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       setState(() {

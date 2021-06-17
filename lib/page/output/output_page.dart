@@ -16,7 +16,8 @@ class _OutputPageState extends State<OutputPage> {
 
   fetchData() async {
     var data = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/cfiANsyatK?indent=2'));
+        'https://api.json-generator.com/templates/PYu6joENGYG1/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       setState(() {

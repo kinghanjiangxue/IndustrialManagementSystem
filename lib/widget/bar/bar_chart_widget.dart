@@ -33,7 +33,8 @@ class BarChartSample2State extends State<BarChartSample2> {
   fetchData() async {
     //标题
     var titleData = await http.post(Uri.parse(
-        'http://www.json-generator.com/api/json/get/bVvgouIsqG?indent=2'));
+        'https://api.json-generator.com/templates/KGe3rhpb7Sx5/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
 
     if (titleData.statusCode == 200) {
       List top = json.decode(titleData.body);
@@ -44,7 +45,8 @@ class BarChartSample2State extends State<BarChartSample2> {
     }
 
     var data = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/ceMbLSofiq?indent=2'));
+        'https://api.json-generator.com/templates/SmDFQKEzwoAb/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       _barChartDataList =

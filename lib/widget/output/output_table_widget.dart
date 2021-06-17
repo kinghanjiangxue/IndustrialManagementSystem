@@ -46,8 +46,10 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
     var params = Map<String, String>();
     params["filterTitle"] = widget.modelNumber!;
     var titleData = await http.post(Uri.parse(
-        'http://www.json-generator.com/api/json/get/clOujSioky?indent=2'),
+        'https://api.json-generator.com/templates/0PYNAIjVjsRl/data'),
+      headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'},
         body: params,
+
     );
 
     if (titleData.statusCode == 200) {
@@ -59,7 +61,8 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
     }
 
     var data = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/cezmrFZFWq?indent=2'));
+        'https://api.json-generator.com/templates/fLlKsVxYNMHZ/data'),
+        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       _barChartDataList =

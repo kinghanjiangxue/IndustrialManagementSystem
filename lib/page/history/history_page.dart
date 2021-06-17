@@ -14,24 +14,56 @@ class PerformancePage extends StatefulWidget {
 }
 
 class _PerformancePageState extends State<PerformancePage> {
+
+  bool visible = false ;
   fetchCode(String fileName) async {
-    var titleData = await http.get(Uri.parse(
-        'http://www.json-generator.com/api/json/get/bTUyMSYoia?indent=2'));
+    String basicAuth = 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x';
+    var titleData = await http.get(
+        Uri.parse('https://api.json-generator.com/templates/EyokH-RI2tvQ/data'),
+        headers: <String, String>{'authorization': basicAuth});
 
     if (titleData.statusCode == 200) {
       Map<String, dynamic> titles = json.decode(titleData.body);
       setState(() {
+        this.visible = false;
         showCustomDialog(fileName, titles['url']);
       });
     } else {
       print("err code $titleData.statusCode");
     }
+
+
+    // if (url.length == 0) {
+    //   print('--$url');
+    // Center(
+    //   child: ProgressHUD(
+    //     backgroundColor: Colors.black.withOpacity(0.6),
+    //     color: Colors.white,
+    //   ),
+    // );
+    // // }
   }
 
   Future showCustomDialog(String fileName, String url) async {
-    var result = await showDialog(
+    print('-${this.visible}');
+    var result =  this.visible ?
+    Visibility(
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      visible: visible,
+      child:Center(
+        child: ProgressHUD(
+          backgroundColor: Colors.black.withOpacity(0.6),
+          color: Colors.white,
+        ),
+      ),
+    )
+    :
+    await showDialog(
         context: context,
         builder: (BuildContext context) {
+
           return AlertDialog(
             title: Text(
               fileName,
@@ -75,28 +107,40 @@ class _PerformancePageState extends State<PerformancePage> {
     super.initState();
   }
 
+  void showHUD() {
+    setState(() {
+      this.visible = true;
+    });
+      showCustomDialog('fileName', '');
+  }
+
   ///下载Excel日报表
   void downloadDailyExcelFile(BuildContext context) {
+    showHUD();
     fetchCode('扫码下载日报表(Excel版)');
   }
 
   ///下载pdf日报表
   void downloadDailyPDFFile(BuildContext context) {
+    showHUD();
     fetchCode('扫码下载日报表(pdf版)');
   }
 
   ///下载Excel月报表
   void downloadMonthExcelFile(BuildContext context) {
+    showHUD();
     fetchCode('扫码下载月报表(Excel版)');
   }
 
   ///下载PDF月报表
   void downloadMonthPDFFile(BuildContext context) {
+    showHUD();
     fetchCode('扫码下载月报表(pdf版)');
   }
 
   @override
   Widget build(BuildContext context) {
+    print('--Scaffold');
     return Scaffold(
         // backgroundColor: Colors.red,
         appBar: AppBar(
