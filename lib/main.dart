@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
           centerTitle: true,
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             //Flex的子widget按比例来占据水平空间
             Flex(
@@ -62,7 +62,7 @@ class _MainPageState extends State<MainPage> {
                   child: Container(
                     height: MediaQuery.of(context).size.height -
                         kBottomNavigationBarHeight -
-                        20,
+                        kToolbarHeight,
                     // color: Colors.red,
                     child: HomePieChartPage(),
                   ),
@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> {
                   child: Container(
                     height: MediaQuery.of(context).size.height -
                         kBottomNavigationBarHeight -
-                        20,
+                        kToolbarHeight,
                     child: GenerateTable(),
                   ),
                 ),
@@ -93,8 +93,9 @@ class _MainPageState extends State<MainPage> {
                     ),
                     height: MediaQuery.of(context).size.height -
                         kBottomNavigationBarHeight -
-                        20,
+                        kToolbarHeight,
                     child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const SizedBox(height: 30.0),
                         Text(

@@ -15,21 +15,32 @@ class HomePieChartPageState extends State {
   @override
   Widget build(BuildContext context) => Card(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
 
-            Expanded(
-              child: PieStartingChart(
-                datas: [80.0, 20.0],
-                legends: ['一月', '二月'],
-              ),
+            PieStartingChart(
+              datas: [80.0, 20.0],
+              legends: ['开机', '关机'],
             ),
 
-            Expanded(
-              child: PieTotalChart(
-                datas: [60.0, 50.0, 40.0, 80.0, 90.0],
-                legends: ['一月', '二月', '三月', '四月', '五月'],
-              ),
+            PieTotalChart(
+              datas: [60.0, 50.0, 40.0, 80.0, 90.0],
+              legends: ['一月', '二月', '三月', '四月', '五月'],
             ),
+
+            // Expanded(
+            //   child: PieStartingChart(
+            //     datas: [80.0, 20.0],
+            //     legends: ['一月', '二月'],
+            //   ),
+            // ),
+            //
+            // Expanded(
+            //   child: PieTotalChart(
+            //     datas: [60.0, 50.0, 40.0, 80.0, 90.0],
+            //     legends: ['一月', '二月', '三月', '四月', '五月'],
+            //   ),
+            // ),
           ],
         ),
       );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:universe/widget/output/output_table_widget.dart';
+// import 'package:universe/widget/output/output_table_widget.dart' as _GenerateOutputTableState;
 import 'package:http/http.dart' as http;
 import 'package:universe/model/output/output_filter_model.dart';
 
@@ -10,6 +11,7 @@ class OutputPage extends StatefulWidget {
 }
 
 class _OutputPageState extends State<OutputPage> {
+
   List<OutputFilterModel> _filterTitleList = [];
 
   Widget tableWidgets  = Container();
@@ -86,6 +88,12 @@ class _OutputPageState extends State<OutputPage> {
                 onChanged: (value) => setState(() {
                   this.filterTitle = value!;
                 }),
+                onTap: (){
+                  print('---点击');
+                  setState(() {
+
+                  });
+                },
               ),
             ),
           ),

@@ -25,8 +25,8 @@ class GenerateOutputTable extends StatefulWidget {
 
 class _GenerateOutputTableState extends State<GenerateOutputTable> {
   static int intervalSpace = 5;
-  final Color leftBarColorOne = const Color(0xff19A4A0);
-  final Color rightBarColorOne = const Color(0xffF75E50);
+  final Color leftBarColorOne = const Color(0xfffd728d);
+  final Color rightBarColorOne = const Color(0xffFeba70);
   final double width = 22;
 
   List<BarChartGroupData> rawBarGroups = [];
@@ -160,7 +160,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                     width: 50,
                   ),
                   Container(
-                    color: Color(0xff19A4A0),
+                    color: this.leftBarColorOne,
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,
@@ -176,7 +176,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                     width: 10,
                   ),
                   Container(
-                    color: Color(0xffF75E50),
+                    color: this.rightBarColorOne,
                     alignment: Alignment.center,
                     width: 15,
                     height: 15,

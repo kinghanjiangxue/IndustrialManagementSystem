@@ -87,7 +87,7 @@ class _GenerateTableState extends State<GenerateTable> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                    columnSpacing: 15,
+                    columnSpacing: 10,
                     columns: [
                       DataColumn(label: Text(homeTitleModel.titleNumber.toString(),
                         style: TextStyle(
