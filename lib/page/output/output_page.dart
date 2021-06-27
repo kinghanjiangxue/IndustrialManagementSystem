@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:universe/widget/output/output_table_widget.dart';
-// import 'package:universe/widget/output/output_table_widget.dart' as _GenerateOutputTableState;
 import 'package:http/http.dart' as http;
 import 'package:universe/model/output/output_filter_model.dart';
+import 'package:universe/page/output/output_select_provider.dart';
+import 'package:provider/provider.dart';
 
 class OutputPage extends StatefulWidget {
   @override
@@ -12,9 +13,12 @@ class OutputPage extends StatefulWidget {
 
 class _OutputPageState extends State<OutputPage> {
 
-  List<OutputFilterModel> _filterTitleList = [];
+  ///生成全局唯一标识
+  GlobalKey<GenerateOutputTableState> tableKey = GlobalKey();
 
-  Widget tableWidgets  = Container();
+  final provider = OutputSelectProvider();
+
+  List<OutputFilterModel> _filterTitleList = [];
 
   fetchData() async {
     var data = await http.get(Uri.parse(
@@ -26,7 +30,8 @@ class _OutputPageState extends State<OutputPage> {
         _filterTitleList =
             top.map((json) => OutputFilterModel.fromJson(json)).toList();
         OutputFilterModel filterTitleModel = _filterTitleList.first;
-        this.filterTitle = filterTitleModel.modelTitle;
+
+        provider.increment(filterTitleModel.modelTitle);
       });
     } else {
       print("err code $data.statusCode");
@@ -38,15 +43,20 @@ class _OutputPageState extends State<OutputPage> {
     super.initState();
     fetchData().whenComplete(() {
       setState(() {
+        provider.refreshChild(GenerateOutputTable(modelNumber: provider.filter));
       });
     });
   }
 
-  String filterTitle = '请选择';
-
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => provider,
+      child: _buildPage(),
+    );
+  }
 
+  Widget _buildPage() {
     return Scaffold(
       backgroundColor: Color(0xffe4e5e9),
       appBar: AppBar(
@@ -61,7 +71,7 @@ class _OutputPageState extends State<OutputPage> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 dropdownColor: Colors.blueAccent,
-                value: this.filterTitle,
+                value: provider.filter,
                 enableFeedback: true,
                 icon: Icon(
                   Icons.arrow_drop_down,
@@ -69,31 +79,27 @@ class _OutputPageState extends State<OutputPage> {
                 ),
                 items: _filterTitleList
                     .map((item) => DropdownMenuItem<String>(
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 0),
-                              Text(
-                                item.modelTitle,
-                                style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          value: item.modelTitle,
-                        ))
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 0),
+                      Text(
+                        item.modelTitle,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  value: item.modelTitle,
+                ))
                     .toList(),
                 onChanged: (value) => setState(() {
-                  this.filterTitle = value!;
+                  // this.filterTitle = value!;
+                  provider.increment(value!);
+                  // provider.refreshChild(GenerateOutputTable(modelNumber: provider.filter));
+                  tableKey.currentState!.refreshTableData();
                 }),
-                onTap: (){
-                  print('---点击');
-                  setState(() {
-
-                  });
-                },
               ),
             ),
           ),
@@ -103,7 +109,7 @@ class _OutputPageState extends State<OutputPage> {
         padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
         child: PageView(
           children: [
-            GenerateOutputTable(modelNumber: this.filterTitle),
+            GenerateOutputTable(key: tableKey,modelNumber: provider.filter),
           ],
         ),
       ),

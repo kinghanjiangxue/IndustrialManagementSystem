@@ -31,17 +31,6 @@ class _PerformancePageState extends State<PerformancePage> {
     } else {
       print("err code $titleData.statusCode");
     }
-
-
-    // if (url.length == 0) {
-    //   print('--$url');
-    // Center(
-    //   child: ProgressHUD(
-    //     backgroundColor: Colors.black.withOpacity(0.6),
-    //     color: Colors.white,
-    //   ),
-    // );
-    // // }
   }
 
   Future showCustomDialog(String fileName, String url) async {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
@@ -9,10 +11,8 @@ import 'package:universe/widget/common/progress_hud.dart';
 import 'package:universe/model/output/output_char_title_model.dart';
 import 'package:universe/model/output/output_chart_model.dart';
 
-
 class GenerateOutputTable extends StatefulWidget {
-
-  final String? modelNumber;//机型
+  final String? modelNumber; //机型
 
   GenerateOutputTable({
     Key? key,
@@ -20,10 +20,10 @@ class GenerateOutputTable extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GenerateOutputTableState createState() => _GenerateOutputTableState();
+  GenerateOutputTableState createState() => GenerateOutputTableState();
 }
 
-class _GenerateOutputTableState extends State<GenerateOutputTable> {
+class GenerateOutputTableState extends State<GenerateOutputTable> {
   static int intervalSpace = 5;
   final Color leftBarColorOne = const Color(0xfffd728d);
   final Color rightBarColorOne = const Color(0xffFeba70);
@@ -38,18 +38,25 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
   List<TitleDataModel> _listTitleData = [];
 
   int touchedGroupIndex = -1;
+  int cont1 = 0;
+
+  void refreshTableData() {
+    temp = [];
+    fetchData().whenComplete(() {
+      setState(() {});
+    });
+  }
 
   fetchData() async {
-    //标题
-    print('title+${widget.modelNumber}');
 
     var params = Map<String, String>();
-    params["filterTitle"] = widget.modelNumber!;
-    var titleData = await http.post(Uri.parse(
-        'https://api.json-generator.com/templates/0PYNAIjVjsRl/data'),
-      headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'},
-        body: params,
-
+    // params["filterTitle"] = widget.modelNumber!;
+    var titleData = await http.post(
+      Uri.parse('https://api.json-generator.com/templates/0PYNAIjVjsRl/data'),
+      headers: <String, String>{
+        'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'
+      },
+      body: params,
     );
 
     if (titleData.statusCode == 200) {
@@ -60,9 +67,12 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
       print("err code $titleData.statusCode");
     }
 
-    var data = await http.get(Uri.parse(
-        'https://api.json-generator.com/templates/fLlKsVxYNMHZ/data'),
-        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
+    var data = await http.get(
+        Uri.parse('https://api.json-generator.com/templates/fLlKsVxYNMHZ/data'),
+        headers: <String, String>{
+          'authorization':
+              'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'
+        });
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       _barChartDataList =
@@ -93,30 +103,29 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
   }
 
   SideTitles getTopBottomTitles() => SideTitles(
-    showTitles: true,
-    getTextStyles: (value) =>
-    const TextStyle(color: Colors.black, fontSize: 13),
-    margin: 10,
-    getTitles: (value) => _listTitleData
-        .firstWhere((element) => element.id == value.toInt())
-        .name
-  );
+      showTitles: true,
+      getTextStyles: (value) =>
+          const TextStyle(color: Colors.black, fontSize: 13),
+      margin: 10,
+      getTitles: (value) => _listTitleData
+          .firstWhere((element) => element.id == value.toInt())
+          .name);
 
   static SideTitles getSideTitles() => SideTitles(
-    showTitles: true,
-    getTextStyles: (value) =>
-    const TextStyle(color: Colors.black, fontSize: 13),
-    rotateAngle: 90,
-    interval: 5.0,
-    margin: 10,
-    reservedSize: 30,
-    getTitles: (double value) => value == 0 ? '0' : '${value.toInt()}',
-  );
+        showTitles: true,
+        getTextStyles: (value) =>
+            const TextStyle(color: Colors.black, fontSize: 13),
+        rotateAngle: 90,
+        interval: 5.0,
+        margin: 10,
+        reservedSize: 30,
+        getTitles: (double value) => value == 0 ? '0' : '${value.toInt()}',
+      );
 
   @override
   Widget build(BuildContext context) {
     if (_listTitleData.length == 0 || _barChartDataList.length == 0) {
-      return  Center(
+      return Center(
         child: ProgressHUD(
           backgroundColor: Colors.black.withOpacity(0.6),
           color: Colors.white,
@@ -204,11 +213,11 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                             tooltipPadding: const EdgeInsets.all(0),
                             tooltipBottomMargin: 8,
                             getTooltipItem: (
-                                BarChartGroupData group,
-                                int groupIndex,
-                                BarChartRodData rod,
-                                int rodIndex,
-                                ) {
+                              BarChartGroupData group,
+                              int groupIndex,
+                              BarChartRodData rod,
+                              int rodIndex,
+                            ) {
                               return BarTooltipItem(
                                 rod.y.round().toString(),
                                 TextStyle(
@@ -240,8 +249,8 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                                 if (touchedGroupIndex != -1) {
                                   var sum = 0.0;
                                   for (var rod
-                                  in showingBarGroups[touchedGroupIndex]
-                                      .barRods) {
+                                      in showingBarGroups[touchedGroupIndex]
+                                          .barRods) {
                                     sum += rod.y;
                                   }
                                   final avg = sum /
@@ -252,12 +261,12 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                                   showingBarGroups[touchedGroupIndex] =
                                       showingBarGroups[touchedGroupIndex]
                                           .copyWith(
-                                        barRods: showingBarGroups[touchedGroupIndex]
-                                            .barRods
-                                            .map((rod) {
-                                          return rod.copyWith(y: avg);
-                                        }).toList(),
-                                      );
+                                    barRods: showingBarGroups[touchedGroupIndex]
+                                        .barRods
+                                        .map((rod) {
+                                      return rod.copyWith(y: avg);
+                                    }).toList(),
+                                  );
                                 }
                               }
                             });
@@ -270,7 +279,7 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                       ),
                       gridData: FlGridData(
                         checkToShowHorizontalLine: (value) =>
-                        value % intervalSpace == 0,
+                            value % intervalSpace == 0,
                         getDrawingHorizontalLine: (value) {
                           if (value == 0) {
                             return FlLine(
@@ -287,15 +296,15 @@ class _GenerateOutputTableState extends State<GenerateOutputTable> {
                       ),
                       borderData: FlBorderData(
                           border: Border(
-                            top: BorderSide.none,
-                            right: BorderSide.none,
-                            left: BorderSide(
-                              width: 0.8,
-                              color: Color(0xffdcdcdc),
-                            ),
-                            bottom:
+                        top: BorderSide.none,
+                        right: BorderSide.none,
+                        left: BorderSide(
+                          width: 0.8,
+                          color: Color(0xffdcdcdc),
+                        ),
+                        bottom:
                             BorderSide(width: 0.8, color: Color(0xffdcdcdc)),
-                          )),
+                      )),
                       barGroups: showingBarGroups,
                     ),
                   ),
