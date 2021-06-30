@@ -2,12 +2,21 @@ import 'package:universe/widget/history/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+typedef clickCallback = void Function(String value);
+
 class DatePickerWidget extends StatefulWidget {
+  DatePickerWidget({
+    Key? key,
+    required this.onClick,
+  }) : super(key: key);
+
+  final clickCallback onClick;
+
   @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
+  DatePickerWidgetState createState() => DatePickerWidgetState();
 }
 
-class _DatePickerWidgetState extends State<DatePickerWidget> {
+class DatePickerWidgetState extends State<DatePickerWidget> {
   final currentDate = DateTime.now();
   DateTime? date;
 
@@ -45,6 +54,9 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
 
     if (newDate == null) return;
 
-    setState(() => date = newDate);
+    setState(() {
+      date = newDate;
+      widget.onClick(getText());
+    });
   }
 }

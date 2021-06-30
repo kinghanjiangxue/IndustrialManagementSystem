@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
@@ -50,7 +48,7 @@ class GenerateOutputTableState extends State<GenerateOutputTable> {
   fetchData() async {
 
     var params = Map<String, String>();
-    // params["filterTitle"] = widget.modelNumber!;
+    params["filterTitle"] = widget.modelNumber!;
     var titleData = await http.post(
       Uri.parse('https://api.json-generator.com/templates/0PYNAIjVjsRl/data'),
       headers: <String, String>{

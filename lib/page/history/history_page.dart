@@ -10,10 +10,15 @@ import 'package:universe/widget/common/progress_hud.dart';
 
 class PerformancePage extends StatefulWidget {
   @override
-  _PerformancePageState createState() => _PerformancePageState();
+  PerformancePageState createState() => PerformancePageState();
 }
 
-class _PerformancePageState extends State<PerformancePage> {
+class PerformancePageState extends State<PerformancePage> {
+
+  final currentDate = DateTime.now();
+
+  ///生成全局唯一标识
+  GlobalKey<GenerateTableState> tableDataKey = GlobalKey();
 
   bool visible = false ;
   fetchCode(String fileName) async {
@@ -160,7 +165,12 @@ class _PerformancePageState extends State<PerformancePage> {
                     SizedBox(
                       width: 10,
                     ),
-                    DatePickerWidget(),
+                    DatePickerWidget(
+                      onClick: (value){
+                        tableDataKey.currentState!.refreshTableData();
+                        print('fgsdfhfgjtr--$value');
+                      },
+                    ),
                     DownloadDailyExcelWidget(
                       onClicked: () => downloadDailyExcelFile(context),
                     ),
@@ -180,7 +190,12 @@ class _PerformancePageState extends State<PerformancePage> {
                     SizedBox(
                       width: 10,
                     ),
-                    DateRangePickerWidget(),
+                    DateRangePickerWidget(
+                      onClick:(value){
+                        tableDataKey.currentState!.refreshTableData();
+                        print('1231253--$value');
+                      } ,
+                    ),
                     DownloadMonthExcelWidget(
                       onClicked: () => downloadMonthExcelFile(context),
                     ),
@@ -194,7 +209,9 @@ class _PerformancePageState extends State<PerformancePage> {
                 height: 10,
               ),
               Expanded(
-                child: GenerateTable(),
+                child: GenerateTable(key: tableDataKey,
+                  dateString:'${currentDate.year}年${currentDate.month}月${currentDate.day}日',
+                    ),
               ),
             ],
           ),

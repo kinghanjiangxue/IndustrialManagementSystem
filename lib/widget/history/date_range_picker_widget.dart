@@ -2,12 +2,22 @@ import 'package:universe/widget/history/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+typedef clickCallback = void Function(String value);
+
 class DateRangePickerWidget extends StatefulWidget {
+
+  DateRangePickerWidget({
+    Key? key,
+    required this.onClick,
+  }) : super(key: key);
+
+  final clickCallback onClick;
+
   @override
-  _DateRangePickerWidgetState createState() => _DateRangePickerWidgetState();
+  DateRangePickerWidgetState createState() => DateRangePickerWidgetState();
 }
 
-class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
+class DateRangePickerWidgetState extends State<DateRangePickerWidget> {
   DateTimeRange? dateRange;
 
   String getFrom() {
@@ -56,6 +66,9 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
 
     if (newDateRange == null) return;
 
-    setState(() => dateRange = newDateRange);
+    setState(() {
+      dateRange = newDateRange;
+      widget.onClick(getFrom() + " 至 " + getUntil());
+    });
   }
 }

@@ -5,13 +5,17 @@ import 'package:universe/model/home/home_data_model.dart';
 import 'package:universe/widget/common/progress_hud.dart';
 
 class GenerateTable extends StatefulWidget {
-  const GenerateTable({Key? key}) : super(key: key);
+  final String dateString;
+
+  const GenerateTable({
+    Key? key,
+    required this.dateString}) : super(key: key);
 
   @override
-  _GenerateTableState createState() => _GenerateTableState();
+  GenerateTableState createState() => GenerateTableState();
 }
 
-class _GenerateTableState extends State<GenerateTable> {
+class GenerateTableState extends State<GenerateTable> {
   List<HomeDataModel> _dataList = [];
   var homeTitleModel = HomeTitleModel();
   static double columnFont = 16;
@@ -19,9 +23,16 @@ class _GenerateTableState extends State<GenerateTable> {
   static String rowFontFamily = "RobotoMono";
 
   fetchUsers() async {
-    var titleData = await http.get(Uri.parse(
-        'https://api.json-generator.com/templates/dC3h8Maw1pw_/data'),
-        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
+    var params = Map<String, String>();
+    params["date"] = widget.dateString;
+    print('fetchUsers-----${widget.dateString}');
+    var titleData = await http.post(
+      Uri.parse('https://api.json-generator.com/templates/dC3h8Maw1pw_/data'),
+      headers: <String, String>{
+        'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'
+      },
+      body: params,
+    );
     if (titleData.statusCode == 200) {
       Map<String, dynamic> titles = json.decode(titleData.body);
       setState(() {
@@ -31,9 +42,13 @@ class _GenerateTableState extends State<GenerateTable> {
       print("err code $titleData.statusCode");
     }
 
-    var data = await http.get(Uri.parse(
-        'https://api.json-generator.com/templates/LsZteXDWDBct/data'),
-        headers:<String, String>{'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'});
+    var data = await http.post(
+      Uri.parse('https://api.json-generator.com/templates/LsZteXDWDBct/data'),
+      headers: <String, String>{
+        'authorization': 'Bearer ' + '29v1p78kr1k0djvb76wncuzf2lzq1fgkb9gkzr4x'
+      },
+      body: params,
+    );
     if (data.statusCode == 200) {
       List top = json.decode(data.body);
       setState(() {
@@ -42,6 +57,13 @@ class _GenerateTableState extends State<GenerateTable> {
     } else {
       print("err code $data.statusCode");
     }
+  }
+
+  void refreshTableData() {
+    _dataList = [];
+    fetchUsers().whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -80,7 +102,6 @@ class _GenerateTableState extends State<GenerateTable> {
                   )
                 ],
               ),
-
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
@@ -239,7 +260,6 @@ class _GenerateTableState extends State<GenerateTable> {
               ),
             ),
           ),
-
         ],
       ),
     );
